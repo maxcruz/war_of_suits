@@ -1,4 +1,4 @@
-package com.maxcruz.warofsuits.ui.theme
+package com.maxcruz.design.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

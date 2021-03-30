@@ -1,4 +1,4 @@
-package com.maxcruz.warofsuits.ui.theme
+package com.maxcruz.design.theme
 
 import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color

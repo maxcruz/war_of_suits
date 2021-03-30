@@ -1,20 +1,18 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
 }
 
 android {
-    compileSdkVersion compile_sdk
+    compileSdk compile_sdk
     buildToolsVersion build_tools
 
     defaultConfig {
-        applicationId "com.maxcruz.warofsuits"
-        minSdkVersion min_sdk
-        targetSdkVersion target_sdk
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk
+        targetSdk target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -40,6 +38,7 @@ android {
 }
 
 dependencies {
+    api project(":app:design")
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "com.google.android.material:material:$material_version"

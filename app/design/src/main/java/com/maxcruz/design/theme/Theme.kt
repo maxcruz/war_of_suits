@@ -1,4 +1,4 @@
-package com.maxcruz.warofsuits.ui.theme
+package com.maxcruz.design.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable

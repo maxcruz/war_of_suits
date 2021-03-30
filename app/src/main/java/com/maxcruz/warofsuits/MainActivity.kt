@@ -7,15 +7,12 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.maxcruz.warofsuits.ui.theme.WarOfSuitsTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WarOfSuitsTheme {
-                Greeting("Android")
-            }
+            Greeting("Android")
         }
     }
 }
@@ -30,7 +27,5 @@ fun Greeting(name: String) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    WarOfSuitsTheme {
-        Greeting("Android")
-    }
+    Greeting("Android")
 }

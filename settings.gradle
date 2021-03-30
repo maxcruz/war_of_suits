@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "War Of Suits"
 include ':app'
+include ':feature:player'
+include ':app:design'
