@@ -3,29 +3,23 @@ package com.maxcruz.warofsuits
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.graphics.toArgb
+import com.maxcruz.design.theme.WarOfSuitsTheme
+import com.maxcruz.warofsuits.navigation.RootNavigationGraph
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Greeting("Android")
+            WarOfSuitsTheme {
+                window.statusBarColor = MaterialTheme.colors.background.toArgb()
+                window.navigationBarColor = MaterialTheme.colors.background.toArgb()
+                RootNavigationGraph()
+            }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Scaffold {
-        Text(text = "Hello $name!")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Greeting("Android")
 }

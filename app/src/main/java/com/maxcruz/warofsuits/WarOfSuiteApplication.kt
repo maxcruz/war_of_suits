@@ -1,6 +1,7 @@
 package com.maxcruz.warofsuits
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class WarOfSuiteApplication : Application() {
-}
+@HiltAndroidApp
+class WarOfSuiteApplication : Application()

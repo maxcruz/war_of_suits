@@ -12,10 +12,12 @@ import androidx.compose.ui.unit.dp
 fun PrincipalButton(
     text: String,
     onClick: () -> Unit = {},
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = { onClick() },
         modifier = Modifier.width(257.dp),
+        enabled = enabled
     ) {
         Text(
             text = text,
