@@ -27,10 +27,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += "-Xopt-in=" +
-                "androidx.compose.animation.ExperimentalAnimationApi," +
-                "kotlinx.coroutines.ExperimentalCoroutinesApi," +
-                "kotlinx.coroutines.FlowPreview"
         useIR = true
     }
     buildFeatures {

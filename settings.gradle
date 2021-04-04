@@ -3,15 +3,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
-        // Workaround: https://github.com/Kotlin/kotlinx.collections.immutable/issues/96
-        // JCenter will be sunset soon, but this dependency isn't published at mavenCentral
-        //noinspection JcenterRepositoryObsolete
-        jcenter {
-            content {
-                includeModule("org.jetbrains.kotlinx", "kotlinx-collections-immutable-jvm")
-            }
-        }
     }
 }
 rootProject.name = "War Of Suits"

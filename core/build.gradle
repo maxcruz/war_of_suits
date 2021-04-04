@@ -27,11 +27,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 }
 
 dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:$immutable_collections_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

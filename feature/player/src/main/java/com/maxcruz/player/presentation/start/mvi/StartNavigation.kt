@@ -1,4 +1,4 @@
-package com.maxcruz.player.presentation.start
+package com.maxcruz.player.presentation.start.mvi
 
 import com.maxcruz.core.mvi.MVINavigation
 import com.maxcruz.player.domain.model.Player

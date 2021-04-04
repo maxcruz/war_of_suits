@@ -1,6 +1,7 @@
-package com.maxcruz.player.presentation.start
+package com.maxcruz.player.presentation.start.mvi
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ data class StartViewState(
     override var navigationQueue: StartNavigation? = null,
 ) : MVIViewState<StartIntent, StartNavigation> {
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     override fun Render(action: (StartIntent) -> Unit) {
         val scaffoldState = rememberScaffoldState()

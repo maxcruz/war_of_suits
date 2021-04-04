@@ -1,4 +1,4 @@
-package com.maxcruz.player.presentation.start
+package com.maxcruz.player.presentation.start.process
 
 import com.maxcruz.core.coroutines.DispatcherProvider
 import com.maxcruz.core.extensions.catchTyped
@@ -7,11 +7,13 @@ import com.maxcruz.player.domain.model.Player
 import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase
 import com.maxcruz.player.domain.usecase.GetUserUseCase
 import com.maxcruz.player.domain.usecase.RecoverGameUseCase
-import com.maxcruz.player.presentation.start.StartIntent.*
-import com.maxcruz.player.presentation.start.StartProcessHolder.NewGameOption.Join
-import com.maxcruz.player.presentation.start.StartProcessHolder.NewGameOption.Start
-import com.maxcruz.player.presentation.start.StartResult.*
-import com.maxcruz.player.presentation.start.StartResult.RecoverGameAttempt.*
+import com.maxcruz.player.presentation.start.mvi.StartIntent
+import com.maxcruz.player.presentation.start.mvi.StartIntent.*
+import com.maxcruz.player.presentation.start.mvi.StartResult
+import com.maxcruz.player.presentation.start.process.StartProcessHolder.NewGameOption.Join
+import com.maxcruz.player.presentation.start.process.StartProcessHolder.NewGameOption.Start
+import com.maxcruz.player.presentation.start.mvi.StartResult.*
+import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

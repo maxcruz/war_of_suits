@@ -6,6 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.player.domain.model.Player
+import com.maxcruz.player.presentation.start.mvi.StartNavigation
+import com.maxcruz.player.presentation.start.mvi.StartViewState
 
 @Composable
 fun StartView(

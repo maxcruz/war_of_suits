@@ -1,41 +1,35 @@
 package com.maxcruz.player.presentation.start
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.maxcruz.core.mvi.MVIViewModel
-import com.maxcruz.player.presentation.start.StartNavigation.*
-import com.maxcruz.player.presentation.start.StartResult.*
-import com.maxcruz.player.presentation.start.StartResult.RecoverGameAttempt.*
+import com.maxcruz.player.presentation.start.mvi.StartIntent
+import com.maxcruz.player.presentation.start.mvi.StartNavigation
+import com.maxcruz.player.presentation.start.mvi.StartNavigation.*
+import com.maxcruz.player.presentation.start.mvi.StartResult
+import com.maxcruz.player.presentation.start.mvi.StartResult.*
+import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
+import com.maxcruz.player.presentation.start.mvi.StartViewState
+import com.maxcruz.player.presentation.start.process.StartProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
     private val processHolder: StartProcessHolder,
-) : ViewModel(), MVIViewModel<StartIntent, StartViewState> {
+) : MVIViewModel<StartIntent, StartViewState, StartResult>(
+    initialState = StartViewState(),
+    initialIntent = StartIntent.RecoverGame
+) {
 
-    private val intentChannel = Channel<StartIntent>(Channel.UNLIMITED)
-    private val initialState = StartViewState()
-    private val stateChannel: StateFlow<StartViewState> = intentChannel
-        .receiveAsFlow()
-        .onStart { emit(StartIntent.RecoverGame) }
-        .flatMapMerge(transform = processHolder::processIntent)
-        .scan(initialState, ::reducer)
-        .stateIn(viewModelScope, SharingStarted.Lazily, initialState)
+    override suspend fun transformer(intent: StartIntent): Flow<StartResult> =
+        processHolder.processIntent(intent)
 
-    override fun intents(): Channel<StartIntent> = intentChannel
-
-    override fun states(): StateFlow<StartViewState> = stateChannel
-
-    private fun reducer(previous: StartViewState, result: StartResult): StartViewState {
-        return when (result) {
+    override suspend fun reducer(previous: StartViewState, result: StartResult): StartViewState =
+        when (result) {
             is RecoverGameAttempt -> reduceRecoverGameAttempt(previous, result)
             is NewGame -> reduceNewGame(previous, result)
             is NavigateToLeaderboard -> navigate(previous, OpenLeaderboard)
         }
-    }
 
     private fun reduceRecoverGameAttempt(
         previous: StartViewState,
