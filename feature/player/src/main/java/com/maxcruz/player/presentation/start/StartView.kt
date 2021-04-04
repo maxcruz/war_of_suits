@@ -1,58 +1,47 @@
 package com.maxcruz.player.presentation.start
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.maxcruz.design.ui.PrincipalButton
-import com.maxcruz.player.R
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
+import com.maxcruz.design.theme.WarOfSuitsTheme
+import com.maxcruz.player.domain.model.Player
 
 @Composable
 fun StartView(
     viewModel: StartViewModel,
+    actionNavigateToGame: (String) -> Unit,
     actionNavigateToWaiting: (String) -> Unit,
     actionNavigateToJoin: (String) -> Unit,
     actionNavigateToLeaderboard: () -> Unit,
 ) {
-    Scaffold {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = stringResource(R.string.start_title),
-                style = MaterialTheme.typography.h4
-            )
+    val viewState = remember(viewModel) { viewModel.states() }.collectAsState()
+    val enqueuedNavigation = viewState.value.dequeueNavigation()
 
-            /*if (isLoading) {
-                CircularProgressIndicator()
-            }*/
-
-            Column {
-                PrincipalButton(
-                    onClick = { actionNavigateToWaiting("RIU") },
-                    text = stringResource(R.string.start_button_new),
-                    //enabled = !isLoading,
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                PrincipalButton(
-                    onClick = { actionNavigateToJoin("KEN") },
-                    text = stringResource(R.string.start_button_join),
-                    //enabled = !isLoading,
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                PrincipalButton(
-                    onClick = { actionNavigateToLeaderboard() },
-                    text = stringResource(R.string.start_button_leaderboard),
-                    //enabled = !isLoading,
-                )
-            }
+    // Perform navigation state
+    enqueuedNavigation?.let {
+        when (it) {
+            is StartNavigation.OpenLeaderboard -> actionNavigateToLeaderboard()
+            is StartNavigation.OpenNewGame ->
+                when (it.player) {
+                    is Player.FirstPlayer -> actionNavigateToWaiting(it.player.userId)
+                    is Player.SecondPlayer -> actionNavigateToJoin(it.player.userId)
+                }
+            is StartNavigation.OpenStartedGame -> actionNavigateToGame(it.sessionId)
         }
+    }
+
+    // Receive and display the view state. Process user intents and navigation intents
+    viewState.value.Render { viewModel.intents().offer(it) }
+}
+
+@Preview
+@Composable
+private fun DefaultPreview() {
+    WarOfSuitsTheme {
+        StartViewState(
+            isLoading = false,
+            hasError = false
+        ).Render {}
     }
 }

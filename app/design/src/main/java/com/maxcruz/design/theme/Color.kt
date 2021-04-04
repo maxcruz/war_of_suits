@@ -14,6 +14,7 @@ val ColorPalette = darkColors(
     primary = PinkDark,
     background = Gray900,
     surface = Gray100,
+    error = White,
     onError = Red300,
     onBackground = Gray100,
     onPrimary = White,

@@ -15,6 +15,9 @@ import com.maxcruz.player.presentation.start.StartViewModel
 import com.maxcruz.player.presentation.waiting.WaitingView
 import com.maxcruz.player.presentation.waiting.WaitingViewModel
 
+/**
+ * Player module navigation graph
+ */
 fun NavGraphBuilder.playerNavigationGraph(
     navController: NavController,
     parentRoute: String,
@@ -42,6 +45,7 @@ fun NavGraphBuilder.playerNavigationGraph(
             val startViewModel = hiltNavGraphViewModel<StartViewModel>(backStackEntry)
             StartView(
                 viewModel = startViewModel,
+                actionNavigateToGame = actionNavigateToGame,
                 actionNavigateToWaiting = actionNavigateToWaiting,
                 actionNavigateToJoin = actionNavigateToJoin,
                 actionNavigateToLeaderboard = actionNavigateToLeaderboard
