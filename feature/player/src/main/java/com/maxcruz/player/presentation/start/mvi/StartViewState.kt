@@ -9,8 +9,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maxcruz.core.mvi.MVIViewState
+import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.ErrorSnackbar
 import com.maxcruz.design.ui.PrincipalButton
 import com.maxcruz.player.R
@@ -19,8 +21,7 @@ import kotlinx.coroutines.launch
 data class StartViewState(
     private val isLoading: Boolean = false,
     private val hasError: Boolean = false,
-    override var navigationQueue: StartNavigation? = null,
-) : MVIViewState<StartIntent, StartNavigation> {
+) : MVIViewState<StartIntent> {
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
@@ -96,4 +97,13 @@ data class StartViewState(
     }
 }
 
-
+@Preview
+@Composable
+private fun DefaultPreview() {
+    WarOfSuitsTheme {
+        StartViewState(
+            isLoading = false,
+            hasError = false
+        ).Render {}
+    }
+}

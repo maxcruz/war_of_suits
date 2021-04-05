@@ -59,9 +59,7 @@ class StartProcessHolder @Inject constructor(
     private fun processRecoverGame(): Flow<RecoverGameAttempt> =
         flow {
             val sessionId = recoverGameUseCase.execute()
-            sessionId?.let {
-                emit(GameSessionFound(it))
-            } ?: emit(NoGameAvailable)
+            sessionId?.let { emit(GameSessionFound(it)) } ?: emit(NoGameAvailable)
         }.onStart { emit(Loading) }
             .catchTyped(PlayerException::class) { emit(NoGameAvailable) }
             .flowOn(dispatcherProvider.io())

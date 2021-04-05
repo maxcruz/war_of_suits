@@ -5,8 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
 import androidx.navigation.compose.rememberNavController
-import com.maxcruz.leaderboard.navigation.leaderboardNavigationGraph
 import com.maxcruz.game.navigation.gameNavigationGraph
+import com.maxcruz.leaderboard.navigation.leaderboardNavigationGraph
 import com.maxcruz.player.navigation.playerNavigationGraph
 
 @Composable
@@ -31,7 +31,7 @@ fun RootNavigationGraph(startDestination: String = RootRoutes.PLAYER) {
     NavHost(navController, startDestination) {
         playerNavigationGraph(
             navController = navController,
-            parentRoute = startDestination,
+            parentRoute = RootRoutes.PLAYER,
             actionNavigateToGame = actionNavigateToGame,
             actionNavigateToLeaderboard = actionNavigateToLeaderboard,
         )

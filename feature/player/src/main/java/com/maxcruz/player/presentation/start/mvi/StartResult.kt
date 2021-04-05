@@ -23,5 +23,8 @@ sealed class StartResult: MVIResult {
         object Failure: NewGame()
     }
 
+    /**
+     * Result navigation to Leaderboard
+     */
     object NavigateToLeaderboard: StartResult()
 }
