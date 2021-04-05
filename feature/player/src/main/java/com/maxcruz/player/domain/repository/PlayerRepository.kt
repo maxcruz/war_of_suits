@@ -1,5 +1,7 @@
 package com.maxcruz.player.domain.repository
 
+import com.maxcruz.player.domain.model.Game
+import com.maxcruz.player.domain.model.Player
 import javax.inject.Inject
 
 /**
@@ -19,21 +21,14 @@ class PlayerRepository @Inject constructor(
     /**
      * Search a game session by user ID or null if not exist
      */
-    suspend fun searchGameSession(userId: String): String? {
+    suspend fun searchGameSession(userId: String): Game? {
         return null
     }
 
     /**
-     * Returns true if both players are in the session and is active, false otherwise
+     * Create a new game session and return the code or retrieve an existing one
      */
-    suspend fun isSessionReady(sessionId: String) : Boolean {
-        return false
-    }
-
-    /**
-     * Remove a game session from the user
-     */
-    suspend fun clearPlayerSession(userId: String) {
-
+    suspend fun createOrRetrieveGame(firstPlayer: Player.FirstPlayer): Game {
+        return Game(sessionId = "xyz123456", code = "ABC123", firstPlayer = firstPlayer, secondPlayer = null)
     }
 }

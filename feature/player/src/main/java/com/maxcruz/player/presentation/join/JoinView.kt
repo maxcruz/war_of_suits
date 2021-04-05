@@ -15,7 +15,6 @@ import com.maxcruz.design.ui.PrincipalButton
 @Composable
 fun JoinView(
     viewModel: JoinViewModel,
-    player2: String,
     actionNavigateToGame: (String) -> Unit,
     actionNavigateUp: () -> Unit,
 ) {
@@ -25,7 +24,7 @@ fun JoinView(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Player: $player2",
+                text = "Player: XXX",
             )
             Spacer(modifier = Modifier.size(16.dp))
             PrincipalButton(

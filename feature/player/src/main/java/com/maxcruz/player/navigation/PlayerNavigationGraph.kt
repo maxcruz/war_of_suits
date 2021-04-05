@@ -9,9 +9,9 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigation
 import com.maxcruz.player.presentation.join.JoinView
 import com.maxcruz.player.presentation.join.JoinViewModel
-import com.maxcruz.player.presentation.start.StartNavigator
 import com.maxcruz.player.presentation.start.StartView
 import com.maxcruz.player.presentation.start.StartViewModel
+import com.maxcruz.player.presentation.start.navigation.StartNavigator
 import com.maxcruz.player.presentation.waiting.WaitingView
 import com.maxcruz.player.presentation.waiting.WaitingViewModel
 import com.maxcruz.player.presentation.waiting.navigation.WaitingNavigator
@@ -46,7 +46,7 @@ fun NavGraphBuilder.playerNavigationGraph(
         composable(
             route = PlayerRoutes.WAITING,
             arguments = listOf(
-                navArgument(PlayerRoutes.Arguments.PLAYER_1) {
+                navArgument(PlayerRoutes.Arguments.CODE) {
                     type = NavType.StringType
                 },
             ),
@@ -57,27 +57,19 @@ fun NavGraphBuilder.playerNavigationGraph(
                 actionNavigateUp = actionNavigateUp,
             )
             waitingViewModel.navigator = waitingNavigator
-            val argument = PlayerRoutes.Arguments.PLAYER_1
+            val argument = PlayerRoutes.Arguments.CODE
             val player1 = requireNotNull(backStackEntry.arguments?.getString(argument))
             WaitingView(
                 viewModel = waitingViewModel,
-                player1 = player1,
+                code = player1,
             )
         }
         composable(
             route = PlayerRoutes.JOIN,
-            arguments = listOf(
-                navArgument(PlayerRoutes.Arguments.PLAYER_2) {
-                    type = NavType.StringType
-                },
-            ),
         ) { backStackEntry ->
             val joinViewModel = hiltNavGraphViewModel<JoinViewModel>(backStackEntry)
-            val argument = PlayerRoutes.Arguments.PLAYER_2
-            val player2 = requireNotNull(backStackEntry.arguments?.getString(argument))
             JoinView(
                 viewModel = joinViewModel,
-                player2 = player2,
                 actionNavigateToGame = actionNavigateToGame,
                 actionNavigateUp = actionNavigateUp
             )

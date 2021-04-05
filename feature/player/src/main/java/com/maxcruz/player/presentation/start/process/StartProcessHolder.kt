@@ -2,18 +2,15 @@ package com.maxcruz.player.presentation.start.process
 
 import com.maxcruz.core.coroutines.DispatcherProvider
 import com.maxcruz.core.extensions.catchTyped
+import com.maxcruz.core.presentation.process.MVIProcessHolder
 import com.maxcruz.player.domain.error.PlayerException
-import com.maxcruz.player.domain.model.Player
 import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase
-import com.maxcruz.player.domain.usecase.GetUserUseCase
+import com.maxcruz.player.domain.usecase.GetPlayerUseCase.NewGameOption
 import com.maxcruz.player.domain.usecase.RecoverGameUseCase
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartIntent.*
 import com.maxcruz.player.presentation.start.mvi.StartResult
-import com.maxcruz.player.presentation.start.process.StartProcessHolder.NewGameOption.Join
-import com.maxcruz.player.presentation.start.process.StartProcessHolder.NewGameOption.Start
 import com.maxcruz.player.presentation.start.mvi.StartResult.*
-import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -24,34 +21,35 @@ import javax.inject.Inject
  * Transform an StartIntent into a StartResult
  */
 class StartProcessHolder @Inject constructor(
-    private val getUserUseCase: GetUserUseCase,
     private val firstPlayerStartGameUseCase: FirstPlayerStartGameUseCase,
     private val recoverGameUseCase: RecoverGameUseCase,
     private val dispatcherProvider: DispatcherProvider,
-) {
+) : MVIProcessHolder<StartIntent, StartResult> {
 
-    fun processIntent(intent: StartIntent): Flow<StartResult> {
+    override fun processIntent(intent: StartIntent): Flow<StartResult> {
         return when (intent) {
-            CreateGame -> processGameStart(Start)
-            JoinGame -> processGameStart(Join)
+            CreateGame -> processGameStart(NewGameOption.Start)
+            JoinGame -> processGameStart(NewGameOption.Join)
             RecoverGame -> processRecoverGame()
             RouteToLeaderboard -> processRouteToLeaderboard()
         }
     }
 
-    private fun processGameStart(option: NewGameOption): Flow<NewGame> =
-        flow<NewGame> {
-            val userId = getUserUseCase.execute()
-            val player: Player = when (option) {
-                Join -> {
-                    Player.SecondPlayer(userId)
-                }
-                Start -> {
-                    Player.FirstPlayer(userId)
-                        .also { firstPlayerStartGameUseCase.execute(it) }
+    private fun processGameStart(option: NewGameOption): Flow<StartResult> =
+        flow {
+            when (option) {
+                NewGameOption.Join -> emit(NewGame.JoinToFirstPlayer)
+                NewGameOption.Start -> {
+                    when (val start = firstPlayerStartGameUseCase.execute()) {
+                        is FirstPlayerStartGameUseCase.StartGame.GameStarted -> {
+                            emit(RecoverGameAttempt.GameSessionFound(start.sessionId))
+                        }
+                        is FirstPlayerStartGameUseCase.StartGame.JoinSecondPlayer -> {
+                            emit(NewGame.WaitForSecondPlayer(start.code))
+                        }
+                    }
                 }
             }
-            emit(NewGame.GameReady(player))
         }.onStart { emit(NewGame.Loading) }
             .catchTyped(PlayerException::class) { emit(NewGame.Failure) }
             .flowOn(dispatcherProvider.io())
@@ -59,19 +57,16 @@ class StartProcessHolder @Inject constructor(
     private fun processRecoverGame(): Flow<RecoverGameAttempt> =
         flow {
             val sessionId = recoverGameUseCase.execute()
-            sessionId?.let { emit(GameSessionFound(it)) } ?: emit(NoGameAvailable)
-        }.onStart { emit(Loading) }
-            .catchTyped(PlayerException::class) { emit(NoGameAvailable) }
+            sessionId?.let { emit(RecoverGameAttempt.GameSessionFound(it)) }
+                ?: emit(RecoverGameAttempt.NoGameAvailable)
+        }.onStart { emit(RecoverGameAttempt.Loading) }
+            .catchTyped(PlayerException::class) {
+                emit(RecoverGameAttempt.NoGameAvailable)
+            }
             .flowOn(dispatcherProvider.io())
 
     private fun processRouteToLeaderboard(): Flow<NavigateToLeaderboard> =
         flow {
             emit(NavigateToLeaderboard)
         }
-
-    private sealed class NewGameOption {
-        object Start : NewGameOption()
-        object Join : NewGameOption()
-    }
-
 }

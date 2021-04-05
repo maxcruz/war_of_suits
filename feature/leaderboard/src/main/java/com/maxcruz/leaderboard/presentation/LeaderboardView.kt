@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.maxcruz.design.ui.CloseButton
 import com.maxcruz.leaderboard.R
 
 @Composable
@@ -19,13 +20,13 @@ fun LeaderboardView(
     actionNavigateUp: () -> Unit,
 ) {
     Scaffold {
-        Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
-            IconButton(
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)) {
+            CloseButton(
                 onClick = { actionNavigateUp() },
                 modifier = Modifier.align(Alignment.TopStart),
-            ) {
-                Icon(Icons.Default.Close, stringResource(R.string.leaderboard_close_button))
-            }
+            )
             Text(
                 text = stringResource(R.string.leaderboard_title),
                 style = MaterialTheme.typography.h4,

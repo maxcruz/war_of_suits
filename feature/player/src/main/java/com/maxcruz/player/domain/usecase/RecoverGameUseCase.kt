@@ -7,17 +7,16 @@ import javax.inject.Inject
  * Search an stored game session for the given user ID
  */
 class RecoverGameUseCase @Inject constructor(
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
 ) {
 
-    suspend fun execute() : String? {
+    suspend fun execute(): String? {
         val userId = playerRepository.getUserIdentifier()
-        val gameSession = playerRepository.searchGameSession(userId)
-        val ready = gameSession?.let { playerRepository.isSessionReady(it) } ?: false
+        val game = playerRepository.searchGameSession(userId) ?: return null
+        val ready = game.firstPlayer != null && game.secondPlayer != null
         return if (ready) {
-            gameSession
+            game.sessionId
         } else {
-            playerRepository.clearPlayerSession(userId)
             null
         }
     }

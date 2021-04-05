@@ -1,12 +1,12 @@
 package com.maxcruz.player.presentation.start
 
-import com.maxcruz.core.mvi.MVIViewModel
-import com.maxcruz.player.domain.model.Player
+import com.maxcruz.core.presentation.MVIViewModel
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartResult
 import com.maxcruz.player.presentation.start.mvi.StartResult.*
 import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
 import com.maxcruz.player.presentation.start.mvi.StartViewState
+import com.maxcruz.player.presentation.start.navigation.StartNavigator
 import com.maxcruz.player.presentation.start.process.StartProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -53,11 +53,12 @@ class StartViewModel @Inject constructor(
     ): StartViewState = when (result) {
         is NewGame.Loading -> previous.copy(isLoading = true, hasError = false)
         is NewGame.Failure -> previous.copy(isLoading = false, hasError = true)
-        is NewGame.GameReady -> {
-            when (result.player) {
-                is Player.FirstPlayer -> navigator.actionNavigateToWaiting(result.player.userId)
-                is Player.SecondPlayer -> navigator.actionNavigateToJoin(result.player.userId)
-            }
+        is NewGame.JoinToFirstPlayer -> {
+            navigator.actionNavigateToJoin()
+            previous.copy(isLoading = false, hasError = false)
+        }
+        is NewGame.WaitForSecondPlayer -> {
+            navigator.actionNavigateToWaiting(result.code)
             previous.copy(isLoading = false, hasError = false)
         }
     }

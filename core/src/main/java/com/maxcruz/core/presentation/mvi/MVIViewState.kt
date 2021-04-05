@@ -1,4 +1,4 @@
-package com.maxcruz.core.mvi
+package com.maxcruz.core.presentation.mvi
 
 import androidx.compose.runtime.Composable
 

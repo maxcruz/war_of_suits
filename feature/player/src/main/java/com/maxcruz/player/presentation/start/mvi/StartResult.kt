@@ -1,7 +1,6 @@
 package com.maxcruz.player.presentation.start.mvi
 
-import com.maxcruz.core.mvi.MVIResult
-import com.maxcruz.player.domain.model.Player
+import com.maxcruz.core.presentation.mvi.MVIResult
 
 sealed class StartResult: MVIResult {
 
@@ -19,7 +18,8 @@ sealed class StartResult: MVIResult {
      */
     sealed class NewGame: StartResult() {
         object Loading: NewGame()
-        data class GameReady(val player: Player): NewGame()
+        data class WaitForSecondPlayer(val code: String): NewGame()
+        object JoinToFirstPlayer: NewGame()
         object Failure: NewGame()
     }
 

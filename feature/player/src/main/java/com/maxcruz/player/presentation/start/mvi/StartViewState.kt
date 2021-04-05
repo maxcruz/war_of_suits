@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maxcruz.core.mvi.MVIViewState
+import com.maxcruz.core.presentation.mvi.MVIViewState
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.ErrorSnackbar
 import com.maxcruz.design.ui.PrincipalButton

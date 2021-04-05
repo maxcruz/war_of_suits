@@ -1,6 +1,6 @@
 package com.maxcruz.player.presentation.start.mvi
 
-import com.maxcruz.core.mvi.MVIIntent
+import com.maxcruz.core.presentation.mvi.MVIIntent
 
 sealed class StartIntent : MVIIntent {
 

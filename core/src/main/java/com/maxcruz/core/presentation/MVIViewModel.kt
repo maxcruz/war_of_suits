@@ -1,8 +1,11 @@
-package com.maxcruz.core.mvi
+package com.maxcruz.core.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maxcruz.core.navigation.Navigator
+import com.maxcruz.core.presentation.mvi.MVIIntent
+import com.maxcruz.core.presentation.mvi.MVIResult
+import com.maxcruz.core.presentation.mvi.MVIViewState
+import com.maxcruz.core.presentation.navigation.MVINavigator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +15,7 @@ import kotlinx.coroutines.flow.*
  * This component offers a publisher to receive intents from the view and a subscription
  * to emit immutable view states
  */
-abstract class MVIViewModel<I : MVIIntent, S : MVIViewState<I>, R : MVIResult, N : Navigator>(
+abstract class MVIViewModel<I : MVIIntent, S : MVIViewState<I>, R : MVIResult, N : MVINavigator>(
     initialState: S,
     initialIntent: I? = null,
 ) : ViewModel() {
