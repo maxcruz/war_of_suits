@@ -13,9 +13,4 @@ sealed class WaitingResult : MVIResult {
      * The second player joined and the game can start
      */
     data class GameSession(val sessionId: String): WaitingResult()
-
-    /**
-     * The game has been discarded
-     */
-    object GameClosed : WaitingResult()
 }

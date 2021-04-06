@@ -1,12 +1,13 @@
 package com.maxcruz.player.presentation.start
 
 import com.maxcruz.core.presentation.MVIViewModel
+import com.maxcruz.player.navigation.navigators.StartNavigator
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartResult
-import com.maxcruz.player.presentation.start.mvi.StartResult.*
+import com.maxcruz.player.presentation.start.mvi.StartResult.NewGame
+import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt
 import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
 import com.maxcruz.player.presentation.start.mvi.StartViewState
-import com.maxcruz.player.navigation.navigators.StartNavigator
 import com.maxcruz.player.presentation.start.process.StartProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -29,10 +30,6 @@ class StartViewModel @Inject constructor(
         when (result) {
             is RecoverGameAttempt -> reduceRecoverGameAttempt(previous, result)
             is NewGame -> reduceNewGame(previous, result)
-            is NavigateToLeaderboard -> {
-                navigator.actionNavigateToLeaderboard()
-                previous.copy(isLoading = false, hasError = false)
-            }
         }
 
     private fun reduceRecoverGameAttempt(

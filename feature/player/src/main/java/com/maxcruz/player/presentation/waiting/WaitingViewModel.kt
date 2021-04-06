@@ -2,10 +2,10 @@ package com.maxcruz.player.presentation.waiting
 
 import com.maxcruz.core.extensions.memoize
 import com.maxcruz.core.presentation.MVIViewModel
+import com.maxcruz.player.navigation.navigators.GameStartNavigator
 import com.maxcruz.player.presentation.waiting.mvi.WaitingIntent
 import com.maxcruz.player.presentation.waiting.mvi.WaitingResult
 import com.maxcruz.player.presentation.waiting.mvi.WaitingViewState
-import com.maxcruz.player.navigation.navigators.GameStartNavigator
 import com.maxcruz.player.presentation.waiting.process.WaitingProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -41,10 +41,6 @@ class WaitingViewModel @Inject constructor(
     ): WaitingViewState {
         return when (result) {
             is WaitingResult.ShowCode -> previous.copy(code = result.code)
-            is WaitingResult.GameClosed -> {
-                navigator.actionNavigateUp()
-                previous
-            }
             is WaitingResult.GameSession -> {
                 navigator.actionNavigateToGame(result.sessionId)
                 previous

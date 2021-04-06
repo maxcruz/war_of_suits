@@ -1,9 +1,9 @@
 package com.maxcruz.player.domain.model
 
 /**
- * Game session
+ * Player session
  */
-data class Game(
+data class Session(
     val sessionId: String,
     val code: String,
     val firstPlayer: Player.FirstPlayer?,

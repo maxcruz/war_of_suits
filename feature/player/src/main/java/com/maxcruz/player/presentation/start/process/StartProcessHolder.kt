@@ -1,12 +1,13 @@
 package com.maxcruz.player.presentation.start.process
 
 import com.maxcruz.core.coroutines.DispatcherProvider
+import com.maxcruz.core.error.UnexpectedIntentException
 import com.maxcruz.core.extensions.catchTyped
 import com.maxcruz.core.presentation.process.MVIProcessHolder
 import com.maxcruz.player.domain.error.PlayerException
-import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase
-import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase.StartGame
-import com.maxcruz.player.domain.usecase.RecoverGameUseCase
+import com.maxcruz.player.domain.usecase.FirstPlayerStartSessionUseCase
+import com.maxcruz.player.domain.usecase.FirstPlayerStartSessionUseCase.StartGame
+import com.maxcruz.player.domain.usecase.RecoverSessionUseCase
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartIntent.*
 import com.maxcruz.player.presentation.start.mvi.StartResult
@@ -21,23 +22,23 @@ import javax.inject.Inject
  * Transform an StartIntent into a StartResult
  */
 class StartProcessHolder @Inject constructor(
-    private val firstPlayerStartGameUseCase: FirstPlayerStartGameUseCase,
-    private val recoverGameUseCase: RecoverGameUseCase,
+    private val firstPlayerStartSessionUseCase: FirstPlayerStartSessionUseCase,
+    private val recoverSessionUseCase: RecoverSessionUseCase,
     private val dispatcherProvider: DispatcherProvider,
 ) : MVIProcessHolder<StartIntent, StartResult> {
 
     override fun processIntent(intent: StartIntent): Flow<StartResult> {
         return when (intent) {
-            CreateGame -> processGameStart()
-            JoinGame -> processJoinGame()
-            RecoverGame -> processRecoverGame()
-            RouteToLeaderboard -> processRouteToLeaderboard()
+            is CreateGame -> processGameStart()
+            is JoinGame -> processJoinGame()
+            is RecoverGame -> processRecoverGame()
+            else -> throw UnexpectedIntentException(intent)
         }
     }
 
     private fun processGameStart(): Flow<StartResult> =
         flow {
-            when (val start = firstPlayerStartGameUseCase.execute()) {
+            when (val start = firstPlayerStartSessionUseCase.execute()) {
                 is StartGame.GameStarted -> {
                     emit(RecoverGameAttempt.GameSessionFound(start.sessionId))
                 }
@@ -56,7 +57,7 @@ class StartProcessHolder @Inject constructor(
 
     private fun processRecoverGame(): Flow<RecoverGameAttempt> =
         flow {
-            val sessionId = recoverGameUseCase.execute()
+            val sessionId = recoverSessionUseCase.execute()
             sessionId?.let { emit(RecoverGameAttempt.GameSessionFound(it)) }
                 ?: emit(RecoverGameAttempt.NoGameAvailable)
         }.onStart { emit(RecoverGameAttempt.Loading) }
@@ -64,9 +65,4 @@ class StartProcessHolder @Inject constructor(
                 emit(RecoverGameAttempt.NoGameAvailable)
             }
             .flowOn(dispatcherProvider.io())
-
-    private fun processRouteToLeaderboard(): Flow<NavigateToLeaderboard> =
-        flow {
-            emit(NavigateToLeaderboard)
-        }
 }

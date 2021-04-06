@@ -22,9 +22,4 @@ sealed class StartResult: MVIResult {
         object JoinToFirstPlayer: NewGame()
         object Failure: NewGame()
     }
-
-    /**
-     * Result navigation to Leaderboard
-     */
-    object NavigateToLeaderboard: StartResult()
 }

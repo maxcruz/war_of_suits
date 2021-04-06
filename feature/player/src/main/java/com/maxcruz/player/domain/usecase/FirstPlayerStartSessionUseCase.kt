@@ -7,13 +7,13 @@ import javax.inject.Inject
 /**
  * Create the game and retrieve the code
  */
-class FirstPlayerStartGameUseCase @Inject constructor(
+class FirstPlayerStartSessionUseCase @Inject constructor(
     private val playerRepository: PlayerRepository,
 ) {
 
     suspend fun execute(): StartGame {
         val userId = playerRepository.getUserIdentifier()
-        val game = playerRepository.createOrRetrieveGame(Player.FirstPlayer(userId))
+        val game = playerRepository.createOrRetrieveSession(Player.FirstPlayer(userId))
         return if (game.secondPlayer == null) {
             StartGame.JoinSecondPlayer(game.code)
         } else {
