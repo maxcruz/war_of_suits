@@ -1,4 +1,6 @@
 
+Game: https://en.wikipedia.org/wiki/War_(card_game)
+
 IDE:
 Android Studio Arctic Fox | 2020.3.1 Canary 12
 Build #AI-203.7148.57.2031.7226969, built on March 22, 2021
