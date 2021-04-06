@@ -6,7 +6,7 @@ import com.maxcruz.player.presentation.start.mvi.StartResult
 import com.maxcruz.player.presentation.start.mvi.StartResult.*
 import com.maxcruz.player.presentation.start.mvi.StartResult.RecoverGameAttempt.*
 import com.maxcruz.player.presentation.start.mvi.StartViewState
-import com.maxcruz.player.presentation.start.navigation.StartNavigator
+import com.maxcruz.player.navigation.navigators.StartNavigator
 import com.maxcruz.player.presentation.start.process.StartProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

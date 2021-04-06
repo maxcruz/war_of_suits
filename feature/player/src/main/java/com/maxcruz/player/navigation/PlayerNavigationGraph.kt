@@ -7,14 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigation
+import com.maxcruz.player.navigation.navigators.GameStartNavigator
+import com.maxcruz.player.navigation.navigators.StartNavigator
 import com.maxcruz.player.presentation.join.JoinView
 import com.maxcruz.player.presentation.join.JoinViewModel
 import com.maxcruz.player.presentation.start.StartView
 import com.maxcruz.player.presentation.start.StartViewModel
-import com.maxcruz.player.presentation.start.navigation.StartNavigator
 import com.maxcruz.player.presentation.waiting.WaitingView
 import com.maxcruz.player.presentation.waiting.WaitingViewModel
-import com.maxcruz.player.presentation.waiting.navigation.WaitingNavigator
 
 /**
  * Player module navigation graph
@@ -26,20 +26,21 @@ fun NavGraphBuilder.playerNavigationGraph(
     actionNavigateToLeaderboard: () -> Unit,
 ) {
 
-    val actionNavigateUp: () -> Unit = {
-        navController.navigateUp()
-    }
+    val startNavigator = StartNavigator(
+        navController = navController,
+        actionNavigateToGame = actionNavigateToGame,
+        actionNavigateToLeaderboard = actionNavigateToLeaderboard
+    )
+    val gameStartNavigator = GameStartNavigator(
+        actionNavigateToGame = actionNavigateToGame,
+        actionNavigateUp = { navController.navigateUp() },
+    )
 
     navigation(startDestination = PlayerRoutes.START, route = parentRoute) {
         composable(
             route = PlayerRoutes.START,
         ) { backStackEntry ->
             val startViewModel = hiltNavGraphViewModel<StartViewModel>(backStackEntry)
-            val startNavigator = StartNavigator(
-                navController = navController,
-                actionNavigateToGame = actionNavigateToGame,
-                actionNavigateToLeaderboard = actionNavigateToLeaderboard
-            )
             startViewModel.navigator = startNavigator
             StartView(viewModel = startViewModel)
         }
@@ -52,11 +53,7 @@ fun NavGraphBuilder.playerNavigationGraph(
             ),
         ) { backStackEntry ->
             val waitingViewModel = hiltNavGraphViewModel<WaitingViewModel>(backStackEntry)
-            val waitingNavigator = WaitingNavigator(
-                actionNavigateToGame = actionNavigateToGame,
-                actionNavigateUp = actionNavigateUp,
-            )
-            waitingViewModel.navigator = waitingNavigator
+            waitingViewModel.navigator = gameStartNavigator
             val argument = PlayerRoutes.Arguments.CODE
             val player1 = requireNotNull(backStackEntry.arguments?.getString(argument))
             WaitingView(
@@ -68,11 +65,7 @@ fun NavGraphBuilder.playerNavigationGraph(
             route = PlayerRoutes.JOIN,
         ) { backStackEntry ->
             val joinViewModel = hiltNavGraphViewModel<JoinViewModel>(backStackEntry)
-            JoinView(
-                viewModel = joinViewModel,
-                actionNavigateToGame = actionNavigateToGame,
-                actionNavigateUp = actionNavigateUp
-            )
+            JoinView(viewModel = joinViewModel)
         }
     }
 }

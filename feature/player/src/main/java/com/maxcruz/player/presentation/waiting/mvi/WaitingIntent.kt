@@ -10,11 +10,6 @@ sealed class WaitingIntent : MVIIntent {
     data class Load(val code: String) : WaitingIntent()
 
     /**
-     * Ask the game code
-     */
-    data class SecondPlayerJoined(val sessionId:String) : WaitingIntent()
-
-    /**
      * Discard the started game
      */
     object CloseGame : WaitingIntent()

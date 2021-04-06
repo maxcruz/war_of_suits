@@ -2,6 +2,9 @@ package com.maxcruz.player.presentation.waiting.mvi
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -42,6 +45,8 @@ data class WaitingViewState(
 
                 // Progress indicator
                 AnimatedVisibility(
+                    enter = fadeIn(animationSpec = tween(durationMillis = 200)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 200)),
                     visible = (code == null),
                     modifier = Modifier.align(Alignment.Center),
                 ) {
@@ -57,6 +62,8 @@ data class WaitingViewState(
                     toAnnotatedString()
                 }
                 AnimatedVisibility(
+                    enter = fadeIn(animationSpec = tween(durationMillis = 200)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 200)),
                     visible = (code != null),
                     modifier = Modifier
                         .align(Alignment.Center)

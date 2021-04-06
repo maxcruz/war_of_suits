@@ -5,7 +5,7 @@ import com.maxcruz.core.presentation.MVIViewModel
 import com.maxcruz.player.presentation.waiting.mvi.WaitingIntent
 import com.maxcruz.player.presentation.waiting.mvi.WaitingResult
 import com.maxcruz.player.presentation.waiting.mvi.WaitingViewState
-import com.maxcruz.player.presentation.waiting.navigation.WaitingNavigator
+import com.maxcruz.player.navigation.navigators.GameStartNavigator
 import com.maxcruz.player.presentation.waiting.process.WaitingProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -14,11 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class WaitingViewModel @Inject constructor(
     private val processHolder: WaitingProcessHolder,
-) : MVIViewModel<WaitingIntent, WaitingViewState, WaitingResult, WaitingNavigator>(
+) : MVIViewModel<WaitingIntent, WaitingViewState, WaitingResult, GameStartNavigator>(
     initialState = WaitingViewState()
 ) {
 
-    override lateinit var navigator: WaitingNavigator
+    override lateinit var navigator: GameStartNavigator
 
     private val memoizedRetrieveCode = { code: String ->
         intents().offer(WaitingIntent.Load(code))

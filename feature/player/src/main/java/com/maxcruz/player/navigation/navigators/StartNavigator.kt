@@ -1,4 +1,4 @@
-package com.maxcruz.player.presentation.start.navigation
+package com.maxcruz.player.navigation.navigators
 
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate

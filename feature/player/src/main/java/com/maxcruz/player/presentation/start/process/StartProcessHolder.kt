@@ -5,7 +5,7 @@ import com.maxcruz.core.extensions.catchTyped
 import com.maxcruz.core.presentation.process.MVIProcessHolder
 import com.maxcruz.player.domain.error.PlayerException
 import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase
-import com.maxcruz.player.domain.usecase.GetPlayerUseCase.NewGameOption
+import com.maxcruz.player.domain.usecase.FirstPlayerStartGameUseCase.StartGame
 import com.maxcruz.player.domain.usecase.RecoverGameUseCase
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartIntent.*
@@ -28,31 +28,31 @@ class StartProcessHolder @Inject constructor(
 
     override fun processIntent(intent: StartIntent): Flow<StartResult> {
         return when (intent) {
-            CreateGame -> processGameStart(NewGameOption.Start)
-            JoinGame -> processGameStart(NewGameOption.Join)
+            CreateGame -> processGameStart()
+            JoinGame -> processJoinGame()
             RecoverGame -> processRecoverGame()
             RouteToLeaderboard -> processRouteToLeaderboard()
         }
     }
 
-    private fun processGameStart(option: NewGameOption): Flow<StartResult> =
+    private fun processGameStart(): Flow<StartResult> =
         flow {
-            when (option) {
-                NewGameOption.Join -> emit(NewGame.JoinToFirstPlayer)
-                NewGameOption.Start -> {
-                    when (val start = firstPlayerStartGameUseCase.execute()) {
-                        is FirstPlayerStartGameUseCase.StartGame.GameStarted -> {
-                            emit(RecoverGameAttempt.GameSessionFound(start.sessionId))
-                        }
-                        is FirstPlayerStartGameUseCase.StartGame.JoinSecondPlayer -> {
-                            emit(NewGame.WaitForSecondPlayer(start.code))
-                        }
-                    }
+            when (val start = firstPlayerStartGameUseCase.execute()) {
+                is StartGame.GameStarted -> {
+                    emit(RecoverGameAttempt.GameSessionFound(start.sessionId))
+                }
+                is StartGame.JoinSecondPlayer -> {
+                    emit(NewGame.WaitForSecondPlayer(start.code))
                 }
             }
         }.onStart { emit(NewGame.Loading) }
             .catchTyped(PlayerException::class) { emit(NewGame.Failure) }
             .flowOn(dispatcherProvider.io())
+
+    private fun processJoinGame(): Flow<StartResult> =
+        flow {
+            emit(NewGame.JoinToFirstPlayer)
+        }
 
     private fun processRecoverGame(): Flow<RecoverGameAttempt> =
         flow {
