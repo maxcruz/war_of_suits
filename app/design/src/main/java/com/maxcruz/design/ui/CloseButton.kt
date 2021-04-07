@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.maxcruz.design.R
 
+/**
+ * Corner close button, navigate up
+ */
 @Composable
 fun CloseButton(
     onClick: () -> Unit,

@@ -1,10 +1,5 @@
 package com.maxcruz.player.presentation.waiting.mvi
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,13 +19,14 @@ import androidx.compose.ui.unit.dp
 import com.maxcruz.core.presentation.mvi.MVIViewState
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.CloseButton
+import com.maxcruz.design.ui.ShowAnimated
 import com.maxcruz.player.R
 
 data class WaitingViewState(
     private val code: String? = null,
 ) : MVIViewState<WaitingIntent> {
 
-    @OptIn(ExperimentalAnimationApi::class)
+
     @Composable
     override fun Render(action: (WaitingIntent) -> Unit) {
         Scaffold {
@@ -44,11 +40,9 @@ data class WaitingViewState(
                 )
 
                 // Progress indicator
-                AnimatedVisibility(
-                    enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 200)),
+                ShowAnimated(
                     visible = (code == null),
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
                     CircularProgressIndicator()
                 }
@@ -61,13 +55,12 @@ data class WaitingViewState(
                     append(stringResource(R.string.waiting_title_complement))
                     toAnnotatedString()
                 }
-                AnimatedVisibility(
-                    enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 200)),
+
+                ShowAnimated(
                     visible = (code != null),
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(16.dp),
+                        .padding(16.dp)
                 ) {
                     Text(
                         text = text,

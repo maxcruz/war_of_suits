@@ -13,11 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
+/**
+ * Main single line input
+ */
 @Composable
 fun InputField(
     modifier: Modifier = Modifier,
@@ -34,21 +38,21 @@ fun InputField(
             Text(
                 text = placeholder,
                 style = MaterialTheme.typography.h4,
-                color = MaterialTheme.colors.onBackground,
+                color = Color.DarkGray,
             )
         },
-        shape = RoundedCornerShape(16.dp),
-        singleLine = true,
+        textStyle = MaterialTheme.typography.h4,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MaterialTheme.colors.background,
         ),
-        textStyle = MaterialTheme.typography.h4,
+        shape = RoundedCornerShape(16.dp),
+        singleLine = true,
+        onValueChange = { text = it },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Characters,
             imeAction = ImeAction.Done,
         ),
-        onValueChange = { text = it },
         keyboardActions = KeyboardActions(
             onDone = { onDone(text) }
         ),

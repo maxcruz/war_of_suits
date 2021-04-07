@@ -1,8 +1,7 @@
 package com.maxcruz.player.presentation.join.mvi
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -17,6 +16,7 @@ import com.maxcruz.core.presentation.mvi.MVIViewState
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.CloseButton
 import com.maxcruz.design.ui.InputField
+import com.maxcruz.design.ui.ShowAnimated
 import com.maxcruz.player.R
 
 data class JoinViewState(
@@ -25,7 +25,6 @@ data class JoinViewState(
     private val isLoading: Boolean = false,
 ) : MVIViewState<JoinIntent> {
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     override fun Render(action: (JoinIntent) -> Unit) {
         Scaffold {
@@ -38,32 +37,43 @@ data class JoinViewState(
                     modifier = Modifier.align(Alignment.TopStart),
                 )
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxWidth()
+                // Progress indicator
+                ShowAnimated(
+                    visible = isLoading,
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
-
-                    // Message
-                    Text(
-                        text = stringResource(R.string.join_title),
-                        style = MaterialTheme.typography.h4,
-                        modifier = Modifier.padding(all = 16.dp),
-                        textAlign = TextAlign.Center,
-                    )
-
-                    // Input
-                    InputField(
-                        placeholder = "#",
-                        modifier = Modifier.padding(horizontal = 72.dp),
-                        isError = !hasError,
-                        onDone = {
-                            action(JoinIntent.InputCode(code = it))
-                        }
-                    )
+                    CircularProgressIndicator()
                 }
 
+                ShowAnimated(
+                    visible = !isLoading,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        // Message
+                        Text(
+                            text = stringResource(R.string.join_title),
+                            style = MaterialTheme.typography.h4,
+                            modifier = Modifier.padding(all = 16.dp),
+                            textAlign = TextAlign.Center,
+                        )
+
+                        // Input
+                        InputField(
+                            placeholder = "#",
+                            modifier = Modifier.padding(horizontal = 72.dp),
+                            isError = !hasError,
+                            onDone = {
+                                action(JoinIntent.InputCode(code = it))
+                            }
+                        )
+                    }
+                }
             }
         }
     }

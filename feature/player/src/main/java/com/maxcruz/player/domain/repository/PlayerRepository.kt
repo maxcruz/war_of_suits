@@ -6,16 +6,20 @@ import javax.inject.Inject
 
 /**
  * Player related data access
+ * TODO: Connect this with a data source
  */
 class PlayerRepository @Inject constructor(
     // Here goes data module dependency
 ) {
 
+    var session = Session(sessionId = "xyz123456", code = "ABC123", firstPlayer = null, secondPlayer = null)
+    val user = "USER001"
+
     /**
      * Retrieve or generate the user identifier.
      */
     suspend fun getUserIdentifier(): String {
-        return "USER001"
+        return user
     }
 
     /**
@@ -29,17 +33,18 @@ class PlayerRepository @Inject constructor(
      * Return an available game with a second player code
      */
     suspend fun searchSessionByCode(code: String): Session? {
-        return null
+        return session.copy(firstPlayer = Player.FirstPlayer(user))
     }
 
     suspend fun updateSession(session: Session) : Boolean {
-        return false
+        this.session = session
+        return true
     }
 
     /**
      * Create a new game session and return the code or retrieve an existing one
      */
     suspend fun createOrRetrieveSession(firstPlayer: Player.FirstPlayer): Session {
-        return Session(sessionId = "xyz123456", code = "ABC123", firstPlayer = firstPlayer, secondPlayer = null)
+        return session.copy(firstPlayer = firstPlayer)
     }
 }

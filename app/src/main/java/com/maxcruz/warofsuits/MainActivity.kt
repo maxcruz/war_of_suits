@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.warofsuits.navigation.RootNavigationGraph
@@ -16,10 +17,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WarOfSuitsTheme {
-                window.statusBarColor = MaterialTheme.colors.background.toArgb()
-                window.navigationBarColor = MaterialTheme.colors.background.toArgb()
+                FixDefaultThemeColors()
                 RootNavigationGraph()
             }
         }
+    }
+
+    @Composable
+    private fun FixDefaultThemeColors() {
+        window.statusBarColor = MaterialTheme.colors.background.toArgb()
+        window.navigationBarColor = MaterialTheme.colors.background.toArgb()
     }
 }

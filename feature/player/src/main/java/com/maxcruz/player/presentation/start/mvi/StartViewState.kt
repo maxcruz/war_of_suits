@@ -1,7 +1,5 @@
 package com.maxcruz.player.presentation.start.mvi
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,6 +13,7 @@ import com.maxcruz.core.presentation.mvi.MVIViewState
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.ErrorSnackbar
 import com.maxcruz.design.ui.PrincipalButton
+import com.maxcruz.design.ui.ShowAnimated
 import com.maxcruz.player.R
 import kotlinx.coroutines.launch
 
@@ -23,7 +22,6 @@ data class StartViewState(
     private val hasError: Boolean = false,
 ) : MVIViewState<StartIntent> {
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     override fun Render(action: (StartIntent) -> Unit) {
         val scaffoldState = rememberScaffoldState()
@@ -66,7 +64,7 @@ data class StartViewState(
                 }
 
                 // Progress indicator
-                AnimatedVisibility(
+                ShowAnimated(
                     visible = isLoading,
                     modifier = Modifier
                         .align(Alignment.Center)

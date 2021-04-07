@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Informative error message when an action is not required
+ */
 @Composable
 fun ErrorSnackbar(
     state: SnackbarHostState,
