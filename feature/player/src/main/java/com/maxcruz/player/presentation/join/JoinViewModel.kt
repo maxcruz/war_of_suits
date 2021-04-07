@@ -16,6 +16,7 @@ class JoinViewModel @Inject constructor(
 ) : MVIViewModel<JoinIntent, JoinViewState, JoinResult, GameStartNavigator>(
     initialState = JoinViewState()
 ) {
+
     override lateinit var navigator: GameStartNavigator
 
     override suspend fun transformer(intent: JoinIntent): Flow<JoinResult> =

@@ -1,13 +1,8 @@
 package com.maxcruz.player.presentation.join.mvi
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -15,14 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maxcruz.core.presentation.mvi.MVIViewState
 import com.maxcruz.design.theme.WarOfSuitsTheme
 import com.maxcruz.design.ui.CloseButton
+import com.maxcruz.design.ui.InputField
 import com.maxcruz.player.R
 
 data class JoinViewState(
@@ -44,30 +38,32 @@ data class JoinViewState(
                     modifier = Modifier.align(Alignment.TopStart),
                 )
 
-
-
-                // Message
-                val text = with(AnnotatedString.Builder(stringResource(R.string.waiting_title))) {
-                    pushStyle(SpanStyle(color = MaterialTheme.colors.primary))
-                    append("")
-                    pop()
-                    append(stringResource(R.string.waiting_title_complement))
-                    toAnnotatedString()
-                }
-                AnimatedVisibility(
-                    enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 200)),
-                    visible = true,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(16.dp),
+                        .fillMaxWidth()
                 ) {
+
+                    // Message
                     Text(
-                        text = text,
+                        text = stringResource(R.string.join_title),
                         style = MaterialTheme.typography.h4,
+                        modifier = Modifier.padding(all = 16.dp),
                         textAlign = TextAlign.Center,
                     )
+
+                    // Input
+                    InputField(
+                        placeholder = "#",
+                        modifier = Modifier.padding(horizontal = 72.dp),
+                        isError = !hasError,
+                        onDone = {
+                            action(JoinIntent.InputCode(code = it))
+                        }
+                    )
                 }
+
             }
         }
     }

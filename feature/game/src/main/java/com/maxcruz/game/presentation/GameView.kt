@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maxcruz.design.ui.PrincipalButton
+import androidx.compose.runtime.getValue
 
 @Composable
 fun GameView(
@@ -17,7 +18,7 @@ fun GameView(
     sessionId: String,
     actionNavigateUp: () -> Unit,
 ) {
-    val viewState = remember(viewModel) { viewModel.counter }.collectAsState(initial = 0)
+    val viewState by remember(viewModel) { viewModel.counter }.collectAsState(initial = 0)
 
     // TODO: Idea apply state hoisting moving the render state to the view function in GameViewState
     Scaffold {
@@ -27,7 +28,7 @@ fun GameView(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "COUNTER: ${viewState.value}",
+                text = "COUNTER: $viewState",
             )
             Spacer(modifier = Modifier.size(16.dp))
             PrincipalButton(

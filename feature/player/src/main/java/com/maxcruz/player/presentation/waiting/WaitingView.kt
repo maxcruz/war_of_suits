@@ -2,6 +2,7 @@ package com.maxcruz.player.presentation.waiting
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.maxcruz.player.presentation.waiting.mvi.WaitingIntent
 
@@ -14,7 +15,7 @@ fun WaitingView(
     viewModel.load(code = code)
 
     // Render and offer intents
-    val viewState = remember(viewModel) { viewModel.states() }.collectAsState().value
+    val viewState by remember(viewModel) { viewModel.states() }.collectAsState()
     viewState.Render { intent ->
         when (intent) {
             is WaitingIntent.CloseGame -> viewModel.navigator.actionNavigateUp()

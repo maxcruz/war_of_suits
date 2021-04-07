@@ -65,6 +65,7 @@ fun NavGraphBuilder.playerNavigationGraph(
             route = PlayerRoutes.JOIN,
         ) { backStackEntry ->
             val joinViewModel = hiltNavGraphViewModel<JoinViewModel>(backStackEntry)
+            joinViewModel.navigator = gameStartNavigator
             JoinView(viewModel = joinViewModel)
         }
     }
