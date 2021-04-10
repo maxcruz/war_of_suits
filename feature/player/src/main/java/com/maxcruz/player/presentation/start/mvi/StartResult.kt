@@ -1,5 +1,6 @@
 package com.maxcruz.player.presentation.start.mvi
 
+import com.maxcruz.core.domain.model.Player
 import com.maxcruz.core.presentation.mvi.MVIResult
 
 sealed class StartResult: MVIResult {
@@ -9,7 +10,10 @@ sealed class StartResult: MVIResult {
      */
     sealed class RecoverGameAttempt: StartResult() {
         object Loading: RecoverGameAttempt()
-        data class GameSessionFound(val sessionId: String): RecoverGameAttempt()
+        data class GameSessionFound(
+            val sessionId: String,
+            val player: Player,
+        ): RecoverGameAttempt()
         object NoGameAvailable: RecoverGameAttempt()
     }
 

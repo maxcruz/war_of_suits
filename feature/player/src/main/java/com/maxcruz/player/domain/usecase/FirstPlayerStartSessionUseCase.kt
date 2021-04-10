@@ -1,6 +1,5 @@
 package com.maxcruz.player.domain.usecase
 
-import com.maxcruz.player.domain.model.Player
 import com.maxcruz.player.domain.repository.PlayerRepository
 import javax.inject.Inject
 
@@ -11,18 +10,11 @@ class FirstPlayerStartSessionUseCase @Inject constructor(
     private val playerRepository: PlayerRepository,
 ) {
 
-    suspend fun execute(): StartGame {
+    suspend fun execute(): JoinSecondPlayer {
         val userId = playerRepository.getUserIdentifier()
-        val game = playerRepository.createOrRetrieveSession(Player.FirstPlayer(userId))
-        return if (game.secondPlayer == null) {
-            StartGame.JoinSecondPlayer(game.code)
-        } else {
-            StartGame.GameStarted(game.sessionId)
-        }
+        val game = playerRepository.createOrRetrieveSession(userId)
+        return JoinSecondPlayer(game.code)
     }
 
-    sealed class StartGame {
-        data class JoinSecondPlayer(val code: String) : StartGame()
-        data class GameStarted(val sessionId: String) : StartGame()
-    }
+    data class JoinSecondPlayer(val code: String)
 }

@@ -1,14 +1,16 @@
 package com.maxcruz.player.navigation
 
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigation
-import com.maxcruz.player.navigation.navigators.GameStartNavigator
-import com.maxcruz.player.navigation.navigators.StartNavigator
+import com.maxcruz.player.navigation.PlayerNavigator.Companion.CODE
+import com.maxcruz.player.navigation.PlayerNavigator.Companion.JOIN
+import com.maxcruz.player.navigation.PlayerNavigator.Companion.ROOT
+import com.maxcruz.player.navigation.PlayerNavigator.Companion.START
+import com.maxcruz.player.navigation.PlayerNavigator.Companion.WAITING
 import com.maxcruz.player.presentation.join.JoinView
 import com.maxcruz.player.presentation.join.JoinViewModel
 import com.maxcruz.player.presentation.start.StartView
@@ -19,53 +21,23 @@ import com.maxcruz.player.presentation.waiting.WaitingViewModel
 /**
  * Player module navigation graph
  */
-fun NavGraphBuilder.playerNavigationGraph(
-    navController: NavController,
-    parentRoute: String,
-    actionNavigateToGame: (String) -> Unit,
-    actionNavigateToLeaderboard: () -> Unit,
-) {
-
-    val startNavigator = StartNavigator(
-        navController = navController,
-        actionNavigateToGame = actionNavigateToGame,
-        actionNavigateToLeaderboard = actionNavigateToLeaderboard
-    )
-    val gameStartNavigator = GameStartNavigator(
-        actionNavigateToGame = actionNavigateToGame,
-        actionNavigateUp = { navController.navigateUp() },
-    )
-
-    navigation(startDestination = PlayerRoutes.START, route = parentRoute) {
-        composable(
-            route = PlayerRoutes.START,
-        ) { backStackEntry ->
+fun NavGraphBuilder.playerNavigationGraph(playerNavigator: PlayerNavigator) {
+    navigation(startDestination = START, route = ROOT) {
+        composable(route = START) { backStackEntry ->
             val startViewModel = hiltNavGraphViewModel<StartViewModel>(backStackEntry)
-            startViewModel.navigator = startNavigator
+            startViewModel.navigator = playerNavigator
             StartView(viewModel = startViewModel)
         }
-        composable(
-            route = PlayerRoutes.WAITING,
-            arguments = listOf(
-                navArgument(PlayerRoutes.Arguments.CODE) {
-                    type = NavType.StringType
-                },
-            ),
-        ) { backStackEntry ->
+        val arguments = listOf(navArgument(CODE) { type = NavType.StringType })
+        composable(route = WAITING, arguments = arguments) { backStackEntry ->
             val waitingViewModel = hiltNavGraphViewModel<WaitingViewModel>(backStackEntry)
-            waitingViewModel.navigator = gameStartNavigator
-            val argument = PlayerRoutes.Arguments.CODE
-            val player1 = requireNotNull(backStackEntry.arguments?.getString(argument))
-            WaitingView(
-                viewModel = waitingViewModel,
-                code = player1,
-            )
+            val code = requireNotNull(backStackEntry.arguments?.getString(CODE))
+            waitingViewModel.navigator = playerNavigator
+            WaitingView(viewModel = waitingViewModel, code = code)
         }
-        composable(
-            route = PlayerRoutes.JOIN,
-        ) { backStackEntry ->
+        composable(route = JOIN) { backStackEntry ->
             val joinViewModel = hiltNavGraphViewModel<JoinViewModel>(backStackEntry)
-            joinViewModel.navigator = gameStartNavigator
+            joinViewModel.navigator = playerNavigator
             JoinView(viewModel = joinViewModel)
         }
     }

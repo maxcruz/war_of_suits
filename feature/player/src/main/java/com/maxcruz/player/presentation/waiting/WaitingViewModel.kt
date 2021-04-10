@@ -2,7 +2,7 @@ package com.maxcruz.player.presentation.waiting
 
 import com.maxcruz.core.extensions.memoize
 import com.maxcruz.core.presentation.MVIViewModel
-import com.maxcruz.player.navigation.navigators.GameStartNavigator
+import com.maxcruz.player.navigation.PlayerNavigator
 import com.maxcruz.player.presentation.waiting.mvi.WaitingIntent
 import com.maxcruz.player.presentation.waiting.mvi.WaitingResult
 import com.maxcruz.player.presentation.waiting.mvi.WaitingViewState
@@ -14,11 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class WaitingViewModel @Inject constructor(
     private val processHolder: WaitingProcessHolder,
-) : MVIViewModel<WaitingIntent, WaitingViewState, WaitingResult, GameStartNavigator>(
+) : MVIViewModel<WaitingIntent, WaitingViewState, WaitingResult, PlayerNavigator>(
     initialState = WaitingViewState()
 ) {
 
-    override lateinit var navigator: GameStartNavigator
+    override lateinit var navigator: PlayerNavigator
 
     private val memoizedRetrieveCode = { code: String ->
         intents().offer(WaitingIntent.Load(code))
@@ -42,7 +42,7 @@ class WaitingViewModel @Inject constructor(
         return when (result) {
             is WaitingResult.ShowCode -> previous.copy(code = result.code)
             is WaitingResult.GameSession -> {
-                navigator.actionNavigateToGame(result.sessionId)
+                navigator.actionNavigateToGame(result.sessionId, result.player)
                 previous
             }
         }

@@ -4,23 +4,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maxcruz.design.ui.PrincipalButton
-import androidx.compose.runtime.getValue
+import com.maxcruz.core.domain.model.Player
 
 @Composable
 fun GameView(
     viewModel: GameViewModel,
     sessionId: String,
-    actionNavigateUp: () -> Unit,
+    player: Player,
 ) {
-    val viewState by remember(viewModel) { viewModel.counter }.collectAsState(initial = 0)
 
-    // TODO: Idea apply state hoisting moving the render state to the view function in GameViewState
+
+
     Scaffold {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -28,11 +26,11 @@ fun GameView(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "COUNTER: $viewState",
+                text = "COUNTER: 0",
             )
             Spacer(modifier = Modifier.size(16.dp))
             PrincipalButton(
-                onClick = { actionNavigateUp() },
+                onClick = { viewModel.navigator.actionNavigateUp()  },
                 text = "Close"
             )
 

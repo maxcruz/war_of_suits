@@ -1,6 +1,5 @@
 package com.maxcruz.player.domain.repository
 
-import com.maxcruz.player.domain.model.Player
 import com.maxcruz.player.domain.model.Session
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class PlayerRepository @Inject constructor(
      * Return an available game with a second player code
      */
     suspend fun searchSessionByCode(code: String): Session? {
-        return session.copy(firstPlayer = Player.FirstPlayer(user))
+        return session
     }
 
     suspend fun updateSession(session: Session) : Boolean {
@@ -44,7 +43,7 @@ class PlayerRepository @Inject constructor(
     /**
      * Create a new game session and return the code or retrieve an existing one
      */
-    suspend fun createOrRetrieveSession(firstPlayer: Player.FirstPlayer): Session {
+    suspend fun createOrRetrieveSession(firstPlayer: String): Session {
         return session.copy(firstPlayer = firstPlayer)
     }
 }

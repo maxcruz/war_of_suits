@@ -1,7 +1,7 @@
 package com.maxcruz.player.presentation.start
 
 import com.maxcruz.core.presentation.MVIViewModel
-import com.maxcruz.player.navigation.navigators.StartNavigator
+import com.maxcruz.player.navigation.PlayerNavigator
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartResult
 import com.maxcruz.player.presentation.start.mvi.StartResult.NewGame
@@ -16,12 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 class StartViewModel @Inject constructor(
     private val processHolder: StartProcessHolder,
-) : MVIViewModel<StartIntent, StartViewState, StartResult, StartNavigator>(
+) : MVIViewModel<StartIntent, StartViewState, StartResult, PlayerNavigator>(
     initialState = StartViewState(),
     initialIntent = StartIntent.RecoverGame
 ) {
 
-    override lateinit var navigator: StartNavigator
+    override lateinit var navigator: PlayerNavigator
 
     override suspend fun transformer(intent: StartIntent): Flow<StartResult> =
         processHolder.processIntent(intent)
@@ -39,7 +39,7 @@ class StartViewModel @Inject constructor(
         is Loading -> previous.copy(isLoading = true, hasError = false)
         is NoGameAvailable -> previous.copy(isLoading = false)
         is GameSessionFound -> {
-            navigator.actionNavigateToGame(result.sessionId)
+            navigator.actionNavigateToGame(result.sessionId, result.player)
             previous
         }
     }

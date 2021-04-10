@@ -1,5 +1,6 @@
 package com.maxcruz.player.presentation.waiting.mvi
 
+import com.maxcruz.core.domain.model.Player
 import com.maxcruz.core.presentation.mvi.MVIResult
 
 sealed class WaitingResult : MVIResult {
@@ -12,5 +13,8 @@ sealed class WaitingResult : MVIResult {
     /**
      * The second player joined and the game can start
      */
-    data class GameSession(val sessionId: String): WaitingResult()
+    data class GameSession(
+        val sessionId: String,
+        val player: Player,
+    ): WaitingResult()
 }
