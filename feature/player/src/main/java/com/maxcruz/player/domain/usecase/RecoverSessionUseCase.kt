@@ -1,7 +1,7 @@
 package com.maxcruz.player.domain.usecase
 
-import com.maxcruz.core.domain.model.Player
-import com.maxcruz.core.domain.model.Role
+import com.maxcruz.player.domain.model.Player
+import com.maxcruz.player.domain.model.Role
 import com.maxcruz.player.domain.repository.PlayerRepository
 import javax.inject.Inject
 

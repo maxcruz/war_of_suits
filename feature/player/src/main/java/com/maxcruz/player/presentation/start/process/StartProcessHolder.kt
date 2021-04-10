@@ -27,14 +27,13 @@ class StartProcessHolder @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
 ) : MVIProcessHolder<StartIntent, StartResult> {
 
-    override fun processIntent(intent: StartIntent): Flow<StartResult> {
-        return when (intent) {
+    override fun processIntent(intent: StartIntent): Flow<StartResult> =
+        when (intent) {
             is CreateGame -> processGameStart()
             is JoinGame -> processJoinGame()
             is RecoverGame -> processRecoverGame()
             else -> throw UnexpectedIntentException(intent)
         }
-    }
 
     private fun processGameStart(): Flow<StartResult> =
         flow<NewGame> {

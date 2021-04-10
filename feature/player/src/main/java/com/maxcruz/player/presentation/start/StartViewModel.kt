@@ -1,6 +1,8 @@
 package com.maxcruz.player.presentation.start
 
+import com.maxcruz.core.extensions.memoize
 import com.maxcruz.core.presentation.MVIViewModel
+import com.maxcruz.player.domain.model.Role
 import com.maxcruz.player.navigation.PlayerNavigator
 import com.maxcruz.player.presentation.start.mvi.StartIntent
 import com.maxcruz.player.presentation.start.mvi.StartResult
@@ -18,10 +20,21 @@ class StartViewModel @Inject constructor(
     private val processHolder: StartProcessHolder,
 ) : MVIViewModel<StartIntent, StartViewState, StartResult, PlayerNavigator>(
     initialState = StartViewState(),
-    initialIntent = StartIntent.RecoverGame
 ) {
 
     override lateinit var navigator: PlayerNavigator
+
+    private val memoizedRecoverGame = { _: Boolean ->
+        intents().offer(StartIntent.RecoverGame)
+        true
+    }.memoize()
+
+    /**
+     * Ask for the game code one time when the screen loads
+     */
+    fun tryRecoverGame() {
+        memoizedRecoverGame(true)
+    }
 
     override suspend fun transformer(intent: StartIntent): Flow<StartResult> =
         processHolder.processIntent(intent)
@@ -39,7 +52,8 @@ class StartViewModel @Inject constructor(
         is Loading -> previous.copy(isLoading = true, hasError = false)
         is NoGameAvailable -> previous.copy(isLoading = false)
         is GameSessionFound -> {
-            navigator.actionNavigateToGame(result.sessionId, result.player)
+            val dealer = result.player.role == Role.FIRST
+            navigator.actionNavigateToGame(result.sessionId, dealer)
             previous
         }
     }

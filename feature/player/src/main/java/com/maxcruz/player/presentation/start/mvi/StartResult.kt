@@ -1,6 +1,6 @@
 package com.maxcruz.player.presentation.start.mvi
 
-import com.maxcruz.core.domain.model.Player
+import com.maxcruz.player.domain.model.Player
 import com.maxcruz.core.presentation.mvi.MVIResult
 
 sealed class StartResult: MVIResult {

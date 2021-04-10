@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.*
  */
 abstract class MVIViewModel<I : MVIIntent, S : MVIViewState<I>, R : MVIResult, N : MVINavigator>(
     initialState: S,
-    initialIntent: I? = null,
 ) : ViewModel() {
 
     abstract var navigator: N
@@ -27,7 +26,6 @@ abstract class MVIViewModel<I : MVIIntent, S : MVIViewState<I>, R : MVIResult, N
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private val stateChannel: StateFlow<S> = intentChannel
         .receiveAsFlow()
-        .onStart { initialIntent?.let { emit(it) } }
         .flatMapMerge(transform = ::transformer)
         .scan(initialState, ::reducer)
         .stateIn(viewModelScope, SharingStarted.Lazily, initialState)

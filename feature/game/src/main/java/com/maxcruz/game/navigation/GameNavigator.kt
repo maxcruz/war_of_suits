@@ -3,7 +3,6 @@ package com.maxcruz.game.navigation
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
-import com.maxcruz.core.domain.model.Player
 import com.maxcruz.core.presentation.navigation.MVINavigator
 
 /**
@@ -11,11 +10,10 @@ import com.maxcruz.core.presentation.navigation.MVINavigator
  */
 class GameNavigator(navController: NavController, popUpRoute: String) : MVINavigator {
 
-    val actionNavigateToGame: (String, Player) -> Unit = { sessionId, player ->
+    val actionNavigateToGame: (String, Boolean) -> Unit = { sessionId, dealer ->
         var route = ROOT
         route = route.replace("{$SESSION}", sessionId)
-        route = route.replace("{$USER}", player.id)
-        route = route.replace("{$ROLE}", player.role.name)
+        route = route.replace("{$DEALER}", dealer.toString())
         navController.navigate(route) {
             popUpTo(popUpRoute) { inclusive = true }
             launchSingleTop = true
@@ -29,11 +27,10 @@ class GameNavigator(navController: NavController, popUpRoute: String) : MVINavig
     companion object {
         // Arguments
         const val SESSION = "sessionId"
-        const val USER = "userId"
-        const val ROLE = "role"
+        const val DEALER = "dealer"
 
         // Route
-        const val ROOT = "game_graph/{$SESSION}?user={$USER}&role={$ROLE}"
+        const val ROOT = "game_graph/{$SESSION}/{$DEALER}"
         val GAME = ROOT.replace("game_graph", "game")
     }
 }

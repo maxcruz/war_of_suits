@@ -1,39 +1,22 @@
 package com.maxcruz.game.presentation
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.maxcruz.design.ui.PrincipalButton
-import com.maxcruz.core.domain.model.Player
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 
 @Composable
 fun GameView(
     viewModel: GameViewModel,
     sessionId: String,
-    player: Player,
+    dealer: Boolean,
 ) {
+    // Load game.
+    viewModel.startGame(sessionId, dealer)
 
-
-
-    Scaffold {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "COUNTER: 0",
-            )
-            Spacer(modifier = Modifier.size(16.dp))
-            PrincipalButton(
-                onClick = { viewModel.navigator.actionNavigateUp()  },
-                text = "Close"
-            )
-
-        }
+    // Receive and display view state
+    val viewState by remember(viewModel) { viewModel.states() }.collectAsState()
+    viewState.Render { intent ->
+        viewModel.intents().offer(intent)
     }
 }

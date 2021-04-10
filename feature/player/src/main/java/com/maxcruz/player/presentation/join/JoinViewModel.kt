@@ -26,7 +26,7 @@ class JoinViewModel @Inject constructor(
         return when (result) {
             is JoinResult.SearchGame.NotFound -> previous.copy(hasError = true)
             is JoinResult.SearchGame.Found -> {
-                navigator.actionNavigateToGame(result.sessionId, result.player)
+                navigator.actionNavigateToGame(result.sessionId, false)
                 previous.copy(hasError = false)
             }
         }

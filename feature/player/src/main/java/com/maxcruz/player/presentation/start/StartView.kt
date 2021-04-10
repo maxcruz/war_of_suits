@@ -2,12 +2,15 @@ package com.maxcruz.player.presentation.start
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.maxcruz.player.presentation.start.mvi.StartIntent
-import androidx.compose.runtime.getValue
 
 @Composable
 fun StartView(viewModel: StartViewModel) {
+    // Check if there is a previous session
+    viewModel.tryRecoverGame()
+
     // Receive and display the view state. Process user intents and navigation intents
     val viewState by remember(viewModel) { viewModel.states() }.collectAsState()
     viewState.Render { intent ->

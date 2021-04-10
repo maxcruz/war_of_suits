@@ -1,21 +1,21 @@
 package com.maxcruz.game.domain.usecase
 
-import com.maxcruz.game.domain.model.Card
-import com.maxcruz.game.domain.model.Hand
-import com.maxcruz.game.domain.model.Suit
+import com.maxcruz.game.domain.model.*
 import com.maxcruz.game.domain.model.Suit.*
 import com.maxcruz.game.domain.repository.GameRepository
 import javax.inject.Inject
 
 /**
  * This logic to build a game should be moved to the server side in a real context
+ * Is intended to be run by the first player to deal the cards
  */
-class BuildGameUseCase @Inject constructor(
+class DealGameUseCase @Inject constructor(
     private val repository: GameRepository,
 ) {
 
     suspend fun execute(sessionId: String): Hand {
-        val priority = decidePriority()
+        val user = repository.getUserIdentifier()
+        val priority = shufflePriority()
         val cards = buildDeck()
         val decks = cards.dealCards()
         repository.createGame(
@@ -24,10 +24,10 @@ class BuildGameUseCase @Inject constructor(
             deckFirstPlayer = decks.first,
             deckSecondPlayer = decks.second
         )
-        return Hand(priority, decks.first)
+        return Hand(user, priority, decks.first)
     }
 
-    private fun decidePriority(): List<Suit> =
+    private fun shufflePriority(): Priority =
         listOf(Hearts, Diamonds, Clubs, Spades).shuffled()
 
     private fun buildDeck(): List<Card> =
@@ -50,7 +50,7 @@ class BuildGameUseCase @Inject constructor(
             Card.Ace(this)
         )
 
-    private fun List<Card>.dealCards(): Pair<List<Card>, List<Card>> =
+    private fun List<Card>.dealCards(): Pair<Deck, Deck> =
         shuffled()
             .mapIndexed { index, value -> index to value }
             .partition { it.first >= size / 2 }

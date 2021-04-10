@@ -14,5 +14,5 @@ VM: OpenJDK 64-Bit Server VM by N/A
 
 Versions:
 AGP 7.0.0-alpha12
-Kotlin 1.4.31
-Compose 1.0.0-beta02
+Kotlin 1.4.32
+Compose 1.0.0-beta04

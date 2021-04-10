@@ -1,9 +1,9 @@
 package com.maxcruz.player.presentation.join.process
 
-import com.maxcruz.core.domain.model.Player
-import com.maxcruz.core.domain.model.Role
 import com.maxcruz.core.error.UnexpectedIntentException
 import com.maxcruz.core.presentation.process.MVIProcessHolder
+import com.maxcruz.player.domain.model.Player
+import com.maxcruz.player.domain.model.Role
 import com.maxcruz.player.domain.usecase.SecondPlayerJoinSessionUseCase
 import com.maxcruz.player.presentation.join.mvi.JoinIntent
 import com.maxcruz.player.presentation.join.mvi.JoinResult
@@ -18,7 +18,11 @@ class JoinProcessHolder @Inject constructor(
     override fun processIntent(intent: JoinIntent): Flow<JoinResult> =
         when (intent) {
             is JoinIntent.InputCode -> flow {
-                val session = secondPlayerJoinSessionUseCase.execute(intent.code)
+                val session = if (intent.code.isNotBlank()) {
+                    secondPlayerJoinSessionUseCase.execute(intent.code)
+                } else {
+                    null
+                }
                 if (session != null) {
                     emit(
                         JoinResult.SearchGame.Found(

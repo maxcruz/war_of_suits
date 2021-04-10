@@ -7,6 +7,6 @@
     <string name="start_error_message">🤒 Something went wrong.</string>
     <string name="start_button_hide">Hide</string>
     <string name="waiting_title">Show the code #</string>
-    <string name="waiting_title_complement">\ to the second player and brace yourself for the fight!</string>
+    <string name="waiting_title_complement">\ to the second player and get ready for the fight!</string>
     <string name="join_title">Enter the game code to run to the fight 🐴</string>
 </resources>

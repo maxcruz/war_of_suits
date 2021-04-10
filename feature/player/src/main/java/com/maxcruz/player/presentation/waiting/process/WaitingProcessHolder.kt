@@ -1,7 +1,7 @@
 package com.maxcruz.player.presentation.waiting.process
 
-import com.maxcruz.core.domain.model.Player
-import com.maxcruz.core.domain.model.Role
+import com.maxcruz.player.domain.model.Player
+import com.maxcruz.player.domain.model.Role
 import com.maxcruz.core.error.UnexpectedIntentException
 import com.maxcruz.core.presentation.process.MVIProcessHolder
 import com.maxcruz.player.presentation.waiting.mvi.WaitingIntent

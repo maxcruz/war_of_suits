@@ -42,7 +42,7 @@ class WaitingViewModel @Inject constructor(
         return when (result) {
             is WaitingResult.ShowCode -> previous.copy(code = result.code)
             is WaitingResult.GameSession -> {
-                navigator.actionNavigateToGame(result.sessionId, result.player)
+                navigator.actionNavigateToGame(result.sessionId, true)
                 previous
             }
         }
