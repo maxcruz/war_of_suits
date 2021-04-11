@@ -23,13 +23,13 @@ fun SuitCard(
     modifier: Modifier = Modifier,
     revealed: Boolean = false,
     value: Int? = null,
-    suite: String? = null,
+    suit: String? = null,
     elevation: Dp = 2.dp,
 ) {
     Card(
         modifier = modifier
             .height(350.dp)
-            .width(223.dp),
+            .width(220.dp),
         shape = RoundedCornerShape(corner = CornerSize(size = 16.dp)),
         elevation = elevation
     ) {
@@ -42,27 +42,29 @@ fun SuitCard(
                     contentDescription = "",
                     modifier = Modifier.fillMaxSize(),
                 )
-            } else if (value != null && suite != null) {
+            } else if (value != null && suit != null) {
                 val card = value.cardName()
-                val suiteColor = suite.suiteColor()
-                val corner = @Composable { modifier : Modifier ->
-                    CornerNumber(
-                        cardName = card.first,
-                        suite = suite,
-                        color = suiteColor,
-                        modifier = modifier,
-                    )
-                }
-                corner(Modifier.align(Alignment.TopStart))
+                val suiteColor = suit.suiteColor()
+                CornerNumber(
+                    cardName = card.first,
+                    suite = suit,
+                    color = suiteColor,
+                    modifier = Modifier.align(Alignment.TopStart),
+                )
                 CardCenter(
                     value = value,
                     card = card,
                     color = suiteColor,
-                    suite = suite,
+                    suite = suit,
                     modifier = Modifier
                         .align(Alignment.Center),
                 )
-                corner(Modifier.align(Alignment.BottomEnd).rotate(180f))
+                CornerNumber(
+                    cardName = card.first,
+                    suite = suit,
+                    color = suiteColor,
+                    modifier = Modifier.align(Alignment.BottomEnd).rotate(180f),
+                )
             }
         }
     }
@@ -100,7 +102,7 @@ private fun CardCenter(
     suite: String,
     modifier: Modifier,
 ) {
-    if (value in (2..10)) {
+    if (value in (1..9)) {
         val columns = value.cardColumns()
         Row(modifier = modifier.padding(vertical = 64.dp)) {
             val column = @Composable { modifier : Modifier, items: Int ->
@@ -144,21 +146,22 @@ private fun CardCenter(
 
 private fun Int.cardColumns(): Triple<Int, Int, Int> {
     // Simple logic to split the suite symbol grid in tree columns
-    val part = this / 2
-    return if (this % 2 == 0) {
+    val value = this + 1
+    val part = value / 2
+    return if (value % 2 == 0) {
         Triple(part, 0, part)
     } else {
-        Triple(part, this - (part * 2), part)
+        Triple(part, value - (part * 2), part)
     }
 }
 
 private fun Int.cardName(): Pair<String, String> =
     when (this) {
-        1 -> "A" to ""
-        11 -> "J" to "♝"
-        12 -> "Q" to "♛"
-        13 -> "K" to "♚"
-        in (2..10) -> this.toString() to ""
+        13 -> "A" to ""
+        10 -> "J" to "♝"
+        11 -> "Q" to "♛"
+        12 -> "K" to "♚"
+        in (1..9) -> (this + 1).toString() to ""
         else -> throw IllegalStateException("Unknown card")
     }
 

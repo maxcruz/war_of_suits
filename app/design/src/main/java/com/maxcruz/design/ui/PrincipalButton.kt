@@ -14,12 +14,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PrincipalButton(
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     enabled: Boolean = true,
 ) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier.width(257.dp),
+        modifier = modifier.width(257.dp),
         enabled = enabled
     ) {
         Text(

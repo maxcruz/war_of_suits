@@ -1,6 +1,6 @@
 package com.maxcruz.game.domain.model
 
-sealed class Card(val value: Int, private val suit: Suit) {
+sealed class Card(val value: Int, val suit: Suit) {
     class Two(suite: Suit): Card(1, suite)
     class Three(suite: Suit): Card(2, suite)
     class Four(suite: Suit): Card(3, suite)
