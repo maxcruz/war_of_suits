@@ -17,9 +17,14 @@ private val MontserratFontFamily = FontFamily(
 
 val Typography = Typography(
     defaultFontFamily = MontserratFontFamily,
+    h1 = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 96.sp,
+        letterSpacing = -(1.5.sp),
+    ),
     h2 = TextStyle(
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 72.sp,
+        fontSize = 70.sp,
         letterSpacing = -(0.5.sp),
     ),
     h4 = TextStyle(

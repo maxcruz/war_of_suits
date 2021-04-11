@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="game_error_message">Something went wrong making the movement. Please try again.</string>
+    <string name="game_player_label">"Player: %s"</string>
+    <string name="game_opponent_label">Opponent 👺</string>
+    <string name="game_you_label">You 🧐</string>
 </resources>
