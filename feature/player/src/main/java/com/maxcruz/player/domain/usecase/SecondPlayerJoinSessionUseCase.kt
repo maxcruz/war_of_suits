@@ -12,8 +12,7 @@ class SecondPlayerJoinSessionUseCase @Inject constructor(
         if (session != null) {
             val userId = repository.getUserIdentifier()
             if (session.secondPlayer == null) {
-                val sessionUpdate = session.copy(secondPlayer = userId)
-                if (repository.updateSession(sessionUpdate)) {
+                if (repository.joinSecondPlayer(session.sessionId, userId)) {
                     return JoinResult(session.sessionId, userId)
                 }
             }

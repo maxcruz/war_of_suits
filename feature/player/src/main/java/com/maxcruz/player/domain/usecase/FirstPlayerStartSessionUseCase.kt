@@ -12,8 +12,8 @@ class FirstPlayerStartSessionUseCase @Inject constructor(
 
     suspend fun execute(): JoinSecondPlayer {
         val userId = playerRepository.getUserIdentifier()
-        val game = playerRepository.createOrRetrieveSession(userId)
-        return JoinSecondPlayer(game.code)
+        val code = playerRepository.createOrRetrieveSession(userId)
+        return JoinSecondPlayer(code)
     }
 
     data class JoinSecondPlayer(val code: String)

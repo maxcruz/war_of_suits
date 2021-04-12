@@ -49,7 +49,7 @@ fun InputField(
         singleLine = true,
         onValueChange = { text = it },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             capitalization = KeyboardCapitalization.Characters,
             imeAction = ImeAction.Done,
         ),

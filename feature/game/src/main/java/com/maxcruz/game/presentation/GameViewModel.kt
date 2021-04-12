@@ -37,19 +37,36 @@ class GameViewModel @Inject constructor(
 
     override suspend fun reducer(previous: GameViewState, result: GameResult): GameViewState =
         when (result) {
-            is GameResult.GameLoad.Failure -> TODO()
             is GameResult.GameLoad.Loading -> previous.copy(isLoading = true)
-            is GameResult.Closed -> {
-                navigator.actionNavigateUp()
-                previous
-            }
             is GameResult.GameLoad.GameReady -> with(result) {
                 previous.copy(
+                    session = sessionId,
                     isLoading = false,
                     player = hand.player,
                     deck = hand.deck,
                     suitPriority = hand.priority,
                 )
+            }
+            is GameResult.GameLoad.Failure -> {
+                // Should report to Crashlytics the start failure
+                navigator.actionNavigateUp()
+                previous
+            }
+            is GameResult.Closed -> {
+                navigator.actionNavigateUp()
+                previous
+            }
+            is GameResult.Round.Failure -> previous.copy(hasError = true)
+            is GameResult.Round.OpponentCard -> previous.copy(opponentCard = result.card)
+            is GameResult.Round.RoundResult -> {
+                val deck = previous.deck.toMutableList()
+                val discard = previous.discard.toMutableList()
+                val points = if (result.won) {
+                    (previous.points.first + 1) to previous.points.second
+                } else {
+                    previous.points.first to (previous.points.second + 1)
+                }
+                previous.copy(deck = deck, discard = discard, points = points, hasError = false)
             }
         }
 }

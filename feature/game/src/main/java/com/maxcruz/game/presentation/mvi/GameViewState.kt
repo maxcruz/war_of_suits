@@ -23,6 +23,7 @@ import com.maxcruz.game.domain.model.Suit
 import kotlin.math.roundToInt
 
 data class GameViewState(
+    val session: String = "",
     val isLoading: Boolean = false,
     val player: String = "",
     val points: Pair<Int, Int> = 0 to 0,
@@ -55,14 +56,19 @@ data class GameViewState(
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
                 )
+
                 Spacer(modifier = Modifier.size(24.dp))
                 MatchScore()
                 Spacer(modifier = Modifier.fillMaxHeight(fraction = 0.14f))
                 PlayMat {
-
+                    action(GameIntent.PlayCard(session, it))
                 }
                 Spacer(modifier = Modifier.size(24.dp))
                 SuitePriority()
+            }
+            // Alert
+            EndDialog {
+                action(GameIntent.FinishGame(it))
             }
         }
     }
@@ -81,6 +87,7 @@ data class GameViewState(
     @Composable
     private fun PlayMat(playCard: (Card) -> Unit) {
         BoxWithConstraints {
+
             // Drag animation
             val swipeState = rememberSwipeableState(0)
             val halfPx = with(LocalDensity.current) { ((maxWidth / 2) - 110.dp).toPx() }
@@ -99,6 +106,7 @@ data class GameViewState(
                 (fraction) * 5f
             }
             val dragged = (!swipeState.isAnimationRunning && swipeState.currentValue == 1)
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,11 +161,6 @@ data class GameViewState(
                             .offset(x = 28.dp, y = 28.dp)
                     )
                 }
-
-                // Alert
-                Dialog {
-                    // action to finish the game with the result
-                }
             }
         }
     }
@@ -179,7 +182,7 @@ data class GameViewState(
     }
 
     @Composable
-    private fun Dialog(onDismiss: () -> Unit) {
+    private fun EndDialog(onDismiss: (Int?) -> Unit) {
         result?.let { result ->
             val title: String
             val text: String
@@ -195,7 +198,10 @@ data class GameViewState(
             }
             val buttonLabel = stringResource(id = R.string.result_button)
             ResultDialog(
-                onDismiss = { onDismiss() },
+                onDismiss = {
+                    val points = if (result is Result.Won) points.first else null
+                    onDismiss(points)
+                },
                 title = title,
                 text = text,
                 buttonLabel = buttonLabel
@@ -214,6 +220,7 @@ data class GameViewState(
 private fun DefaultPreview() {
     WarOfSuitsTheme {
         GameViewState(
+            session = "",
             player = "GH123",
             deck = listOf(Card.Ace(Suit.Clubs)),
             discard = listOf(Card.Two(Suit.Spades)),
