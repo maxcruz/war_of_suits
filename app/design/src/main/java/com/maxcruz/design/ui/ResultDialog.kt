@@ -45,7 +45,10 @@ fun ResultDialog(
             ) {
                 PrincipalButton(
                     text = buttonLabel,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
+                    onClick = {
+                        onDismiss()
+                    }
                 )
             }
         }

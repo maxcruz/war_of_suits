@@ -1,6 +1,7 @@
 package com.maxcruz.data.datasource
 
 import com.maxcruz.data.dto.SessionDTO
+import kotlinx.coroutines.flow.Flow
 
 interface SessionDataSource {
 
@@ -8,7 +9,9 @@ interface SessionDataSource {
 
     suspend fun searchSessionByCode(code: String): SessionDTO?
 
-    suspend fun updateSecondPlayer(sessionId: String, pLayer: String)
+    fun waitForSecondPlayer(code: String): Flow<SessionDTO>
+
+    suspend fun secondPlayer(sessionId: String, pLayer: String)
 
     suspend fun createSession(sessionId: String, code: String, pLayer: String)
 }

@@ -8,6 +8,9 @@ import com.maxcruz.data.dto.CardDTO
 import com.maxcruz.data.dto.GameDTO
 import com.maxcruz.data.dto.SessionDTO
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,21 +41,31 @@ class InMemoryDataSource @Inject constructor(
 
     // SessionDataSource
     override suspend fun searchSessionByUser(userId: String): SessionDTO? =
-        storage.values.find { it.game.firstPlayer == userId }
+        storage.values.find { it.game.firstPlayer == userId && it.active }
 
-    override suspend fun searchSessionByCode(code: String): SessionDTO? =
-        storage.values.find { it.code == code }
+    override suspend fun searchSessionByCode(code: String): SessionDTO? {
+        return storage.values.find { it.code == code && it.active }
+    }
 
-    override suspend fun updateSecondPlayer(sessionId: String, pLayer: String) {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
+    override suspend fun secondPlayer(sessionId: String, pLayer: String) {
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
         val game = session.game
-        storage[sessionId] = session.copy(game = game.copy(secondPlayer = pLayer))
+        storage[sessionId] = session.copy(game = game.copy(firstPlayer = pLayer))
     }
 
     override suspend fun createSession(sessionId: String, code: String, pLayer: String) {
         val session = SessionDTO(sessionId, code, GameDTO(pLayer), true)
         storage[sessionId] = session
     }
+
+    override fun waitForSecondPlayer(code: String): Flow<SessionDTO> =
+        flow {
+            // Fake second player joining
+            val session = searchSessionByCode(code) ?: throw IllegalStateException("Code: $code")
+            session.game.secondPlayer = "FAKE"
+            delay(3000)
+            emit(session)
+        }
 
     // GameDataSource
     override suspend fun setupSessionGame(
@@ -61,7 +74,7 @@ class InMemoryDataSource @Inject constructor(
         firstPlayerDeck: List<CardDTO>,
         secondPlayerDeck: List<CardDTO>,
     ) {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
         val game = session.game
         val updatedGame = game.copy(
             priority = priority,
@@ -72,23 +85,34 @@ class InMemoryDataSource @Inject constructor(
     }
 
     override suspend fun getSecondPlayerCard(sessionId: String): CardDTO {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
         return session.game.secondPLayerDeck.last()
     }
 
     override suspend fun removeLastCardsFromPlayers(sessionId: String) {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
         session.game.firstPlayerDeck.removeLast()
         session.game.secondPLayerDeck.removeLast()
     }
 
     override suspend fun getGamePriority(sessionId: String): List<String> {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
         return session.game.priority
     }
 
-    override suspend fun getSecondPlayerHand(sessionId: String): Pair<List<String>, List<CardDTO>> {
-        val session = storage[sessionId] ?: throw IllegalStateException("Not found: $sessionId")
-        return session.game.priority to session.game.secondPLayerDeck
+    override suspend fun updatePoints(sessionId: String, points: Pair<Int, Int>) {
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
+        session.game.pointsFirstPlayer += points.first
+        session.game.pointsSecondPlayer += points.second
+    }
+
+    override suspend fun getGamePoints(sessionId: String): Pair<Int, Int> {
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
+        return session.game.pointsFirstPlayer to session.game.pointsSecondPlayer
+    }
+
+    override suspend fun setActiveFalse(sessionId: String) {
+        val session = storage[sessionId] ?: throw IllegalStateException("Session: $sessionId")
+        session.active = false
     }
 }

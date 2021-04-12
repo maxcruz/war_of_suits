@@ -7,4 +7,5 @@ data class Hand(
     val player: String,
     val priority: Priority,
     val deck: Deck,
+    val points: Pair<Int, Int>,
 )

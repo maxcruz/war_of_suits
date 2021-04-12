@@ -10,10 +10,9 @@ import com.maxcruz.core.presentation.navigation.MVINavigator
  */
 class GameNavigator(navController: NavController, popUpRoute: String) : MVINavigator {
 
-    val actionNavigateToGame: (String, Boolean) -> Unit = { sessionId, dealer ->
+    val actionNavigateToGame: (String) -> Unit = { sessionId ->
         var route = ROOT
         route = route.replace("{$SESSION}", sessionId)
-        route = route.replace("{$DEALER}", dealer.toString())
         navController.navigate(route) {
             popUpTo(popUpRoute) { inclusive = true }
             launchSingleTop = true
@@ -27,10 +26,9 @@ class GameNavigator(navController: NavController, popUpRoute: String) : MVINavig
     companion object {
         // Arguments
         const val SESSION = "sessionId"
-        const val DEALER = "dealer"
 
         // Route
-        const val ROOT = "game_graph/{$SESSION}/{$DEALER}"
+        const val ROOT = "game_graph/{$SESSION}"
         val GAME = ROOT.replace("game_graph", "game")
     }
 }

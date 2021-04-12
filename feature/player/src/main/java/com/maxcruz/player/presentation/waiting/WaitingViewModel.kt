@@ -37,14 +37,13 @@ class WaitingViewModel @Inject constructor(
 
     override suspend fun reducer(
         previous: WaitingViewState,
-        result: WaitingResult,
-    ): WaitingViewState {
-        return when (result) {
+        result: WaitingResult
+    ): WaitingViewState =
+        when (result) {
             is WaitingResult.ShowCode -> previous.copy(code = result.code)
             is WaitingResult.GameSession -> {
-                navigator.actionNavigateToGame(result.sessionId, true)
+                navigator.actionNavigateToGame(result.sessionId)
                 previous
             }
         }
-    }
 }

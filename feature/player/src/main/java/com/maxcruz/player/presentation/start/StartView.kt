@@ -8,9 +8,6 @@ import com.maxcruz.player.presentation.start.mvi.StartIntent
 
 @Composable
 fun StartView(viewModel: StartViewModel) {
-    // Check if there is a previous session
-    viewModel.tryRecoverGame()
-
     // Receive and display the view state. Process user intents and navigation intents
     val viewState by remember(viewModel) { viewModel.states() }.collectAsState()
     viewState.Render { intent ->

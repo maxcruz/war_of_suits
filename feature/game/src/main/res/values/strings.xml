@@ -3,10 +3,13 @@
     <string name="game_error_message">Something went wrong making the movement. Please try again.</string>
     <string name="game_player_label">"Player: %s"</string>
     <string name="game_opponent_label">Opponent 👺</string>
+    <string name="game_opponent_tag">👺</string>
     <string name="game_you_label">You 🧐</string>
     <string name="result_won_title">\nYou won!\n</string>
     <string name="result_won_text">🎉</string>
     <string name="result_lose_title">\nYou lose!\n</string>
     <string name="result_lose_text">💩</string>
+    <string name="result_draw_title">\nDraw!\n</string>
+    <string name="result_draw_text">🙊</string>
     <string name="result_button">Play again</string>
 </resources>

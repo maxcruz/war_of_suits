@@ -8,7 +8,7 @@ sealed class GameIntent : MVIIntent {
     /**
      * Load game information
      */
-    data class Load(val sessionId: String, val dealer: Boolean) : GameIntent()
+    data class Load(val sessionId: String) : GameIntent()
 
     /**
      * Play card
@@ -16,9 +16,14 @@ sealed class GameIntent : MVIIntent {
     data class PlayCard(val sessionId: String, val card: Card): GameIntent()
 
     /**
-     * Report the end of the game to finish
+     * End the turn
      */
-    data class FinishGame(val points: Int? = null): GameIntent()
+    object RoundEnd: GameIntent()
+
+    /**
+     * Finish the game
+     */
+    data class EndGame(val sessionId: String): GameIntent()
 
     /**
      * Close the game session

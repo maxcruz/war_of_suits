@@ -25,6 +25,7 @@ fun SuitCard(
     value: Int? = null,
     suit: String? = null,
     elevation: Dp = 2.dp,
+    tag: String = ""
 ) {
     Card(
         modifier = modifier
@@ -43,6 +44,14 @@ fun SuitCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             } else if (value != null && suit != null) {
+
+                Text(
+                    text = tag,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                        .padding(8.dp)
+                )
+
                 val card = value.cardName()
                 val suiteColor = suit.suiteColor()
                 CornerNumber(
@@ -63,7 +72,9 @@ fun SuitCard(
                     cardName = card.first,
                     suite = suit,
                     color = suiteColor,
-                    modifier = Modifier.align(Alignment.BottomEnd).rotate(180f),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .rotate(180f),
                 )
             }
         }

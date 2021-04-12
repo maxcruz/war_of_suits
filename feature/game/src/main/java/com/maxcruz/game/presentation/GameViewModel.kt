@@ -5,10 +5,12 @@ import com.maxcruz.core.presentation.MVIViewModel
 import com.maxcruz.game.navigation.GameNavigator
 import com.maxcruz.game.presentation.mvi.GameIntent
 import com.maxcruz.game.presentation.mvi.GameResult
+import com.maxcruz.game.presentation.mvi.GameResult.*
 import com.maxcruz.game.presentation.mvi.GameViewState
 import com.maxcruz.game.presentation.process.GameProcessHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,16 +22,15 @@ class GameViewModel @Inject constructor(
 
     override lateinit var navigator: GameNavigator
 
-    private val memoizedStartGame = { load: Pair<String, Boolean> ->
-        val (sessionId, dealer) = load
-        intents().offer(GameIntent.Load(sessionId, dealer))
+    private val memoizedStartGame = { sessionId: String ->
+        intents().offer(GameIntent.Load(sessionId))
     }.memoize()
 
     /**
      * Prepare the cards to start to play
      */
-    fun startGame(sessionId: String, dealer: Boolean) {
-        memoizedStartGame(sessionId to dealer)
+    fun startGame(sessionId: String) {
+        memoizedStartGame(sessionId)
     }
 
     override suspend fun transformer(intent: GameIntent): Flow<GameResult> =
@@ -37,36 +38,58 @@ class GameViewModel @Inject constructor(
 
     override suspend fun reducer(previous: GameViewState, result: GameResult): GameViewState =
         when (result) {
-            is GameResult.GameLoad.Loading -> previous.copy(isLoading = true)
-            is GameResult.GameLoad.GameReady -> with(result) {
+            is GameLoad -> reduceGameLoad(previous, result)
+            is Round -> reduceGameRound(previous, result)
+            is GameEnded -> reduceGameEnded(previous, result)
+        }
+
+    private fun reduceGameLoad(previous: GameViewState, result: GameLoad): GameViewState =
+        when (result) {
+            is GameLoad.Loading -> previous.copy(isLoading = true)
+            is GameLoad.GameReady -> with(result) {
                 previous.copy(
                     session = sessionId,
                     isLoading = false,
-                    player = hand.player,
+                    player = hand.player.takeLast(5).toUpperCase(Locale.getDefault()),
                     deck = hand.deck,
-                    suitPriority = hand.priority,
+                    suitPriority = hand.priority.reversed(),
+                    points = hand.points,
                 )
             }
-            is GameResult.GameLoad.Failure -> {
+            is GameLoad.Failure -> {
                 // Should report to Crashlytics the start failure
                 navigator.actionNavigateUp()
                 previous
             }
-            is GameResult.Closed -> {
-                navigator.actionNavigateUp()
-                previous
-            }
-            is GameResult.Round.Failure -> previous.copy(hasError = true)
-            is GameResult.Round.OpponentCard -> previous.copy(opponentCard = result.card)
-            is GameResult.Round.RoundResult -> {
+        }
+
+    private fun reduceGameRound(previous: GameViewState, result: Round): GameViewState =
+        when (result) {
+            is Round.PlayingCard -> previous.copy(cardPlaying = true)
+            is Round.Failure -> previous.copy(hasError = true)
+            is Round.OpponentCard -> previous.copy(opponentCard = result.card)
+            is Round.RoundResult -> {
                 val deck = previous.deck.toMutableList()
                 val discard = previous.discard.toMutableList()
-                val points = if (result.won) {
-                    (previous.points.first + 1) to previous.points.second
-                } else {
-                    previous.points.first to (previous.points.second + 1)
-                }
-                previous.copy(deck = deck, discard = discard, points = points, hasError = false)
+                deck.remove(result.card)
+                discard.add(result.card)
+                val first = previous.points.first + result.pair.first
+                val second = previous.points.second + result.pair.second
+                previous.copy(
+                    deck = deck,
+                    discard = discard,
+                    points = first to second,
+                    hasError = false,
+                    opponentCard = null,
+                    restartingRound = true,
+                    gameFinished = deck.isEmpty()
+                )
+            }
+            is Round.RoundRestarted -> {
+                previous.copy(restartingRound = false, cardPlaying = false)
             }
         }
+
+    private fun reduceGameEnded(previous: GameViewState, result: GameEnded): GameViewState =
+        previous.copy(result = result.result)
 }

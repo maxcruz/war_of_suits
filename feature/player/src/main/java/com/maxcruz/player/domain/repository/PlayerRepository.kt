@@ -4,6 +4,8 @@ import com.maxcruz.data.datasource.PreferencesDataSource
 import com.maxcruz.data.datasource.SessionDataSource
 import com.maxcruz.data.dto.SessionDTO
 import com.maxcruz.player.domain.model.Session
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.*
 import javax.inject.Inject
 
@@ -30,21 +32,25 @@ class PlayerRepository @Inject constructor(
     }
 
     /**
-     * Return if the user is participating in an active game, null otherwise
-     */
-    suspend fun searchSessionByUser(userId: String): Session? =
-        sessionDataSource.searchSessionByUser(userId)?.map()
-
-    /**
-     * Return an available game with a second player code
+     * Return an available game with a player code
      */
     suspend fun searchSessionByCode(code: String): Session? =
         sessionDataSource.searchSessionByCode(code)?.map()
 
-    suspend fun joinSecondPlayer(sessionId: String, secondPLayer: String): Boolean {
-        sessionDataSource.updateSecondPlayer(sessionId, secondPLayer)
+    /**
+     * Second player joins to the game
+     */
+    suspend fun joinPlayer(sessionId: String, pLayer: String): Boolean {
+        sessionDataSource.secondPlayer(sessionId, pLayer)
         return true
     }
+
+    /**
+     * Emits with the session ID when the second player enters
+     */
+    fun waitSecondPlayer(code: String): Flow<String> =
+        sessionDataSource.waitForSecondPlayer(code)
+            .map { it.sessionId }
 
     /**
      * Create a new game session and return the code or retrieve an existing one

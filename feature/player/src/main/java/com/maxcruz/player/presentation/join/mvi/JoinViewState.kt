@@ -3,6 +3,7 @@ package com.maxcruz.player.presentation.join.mvi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +56,8 @@ data class JoinViewState(
                     // Input
                     InputField(
                         placeholder = "#",
-                        modifier = Modifier.padding(horizontal = 96.dp),
+
+                        modifier = Modifier.width(150.dp),
                         isError = !hasError,
                         onDone = {
                             action(JoinIntent.InputCode(code = it))

@@ -61,7 +61,7 @@ data class WaitingViewState(
 private fun DefaultPreview() {
     WarOfSuitsTheme {
         WaitingViewState(
-            code = "ABC123",
+            code = "44695",
         ).Render {}
     }
 }

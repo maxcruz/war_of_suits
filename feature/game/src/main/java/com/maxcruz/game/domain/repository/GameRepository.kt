@@ -41,9 +41,15 @@ class GameRepository @Inject constructor(
     suspend fun getGamePriority(sessionId: String): Priority =
         gameDataSource.getGamePriority(sessionId).map { it.map() }
 
-    suspend fun getGameCards(sessionId: String): Pair<Priority, Deck> {
-        val (priority, deck) = gameDataSource.getSecondPlayerHand(sessionId)
-        return priority.map { it.map() } to deck.map { it.map() }
+    suspend fun updatePoints(sessionId: String, points: Pair<Int, Int>) {
+        gameDataSource.updatePoints(sessionId, points)
+    }
+
+    suspend fun getGamePoints(sessionId: String): Pair<Int, Int> =
+        gameDataSource.getGamePoints(sessionId)
+
+    suspend fun deactivateGame(sessionId: String) {
+        gameDataSource.setActiveFalse(sessionId)
     }
 
     private fun String.map(): Suit = when (this) {

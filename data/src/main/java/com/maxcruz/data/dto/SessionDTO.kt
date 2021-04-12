@@ -4,5 +4,5 @@ data class SessionDTO(
     val sessionId: String,
     val code: String,
     val game: GameDTO,
-    val active: Boolean,
+    var active: Boolean,
 )

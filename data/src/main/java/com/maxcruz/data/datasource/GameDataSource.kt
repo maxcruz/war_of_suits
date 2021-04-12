@@ -17,5 +17,9 @@ interface GameDataSource {
 
     suspend fun getGamePriority(sessionId: String): List<String>
 
-    suspend fun getSecondPlayerHand(sessionId: String): Pair<List<String>, List<CardDTO>>
+    suspend fun updatePoints(sessionId: String, points: Pair<Int, Int>)
+
+    suspend fun getGamePoints(sessionId: String): Pair<Int, Int>
+
+    suspend fun setActiveFalse(sessionId: String)
 }

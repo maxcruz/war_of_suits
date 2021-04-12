@@ -2,12 +2,11 @@ package com.maxcruz.player.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
-import com.maxcruz.player.domain.model.Player
 import com.maxcruz.core.presentation.navigation.MVINavigator
 
 class PlayerNavigator(
     navController: NavController,
-    val actionNavigateToGame: (String, Boolean) -> Unit,
+    val actionNavigateToGame: (String) -> Unit,
     val actionNavigateToLeaderboard: () -> Unit,
 ) : MVINavigator {
 

@@ -8,25 +8,24 @@ class ResolveRoundUseCase @Inject constructor(
     private val repository: GameRepository,
 ) {
 
-    suspend fun execute(sessionId: String, firstPlayerCard: Card, secondPlayerCard: Card): Winner {
-        return when {
-            firstPlayerCard.value > secondPlayerCard.value -> {
-                Winner.First
-            }
-            firstPlayerCard.value < secondPlayerCard.value -> {
-                Winner.Second
+    suspend fun execute(sessionId: String, playingCard: Card, opponentCard: Card): Pair<Int, Int> {
+        val (first, second) = when (playingCard.value) {
+            opponentCard.value -> {
+                val priority = repository.getGamePriority(sessionId)
+                val firstCardIndex = priority.indexOf(playingCard.suit)
+                val secondCardIndex = priority.indexOf(opponentCard.suit)
+                firstCardIndex to secondCardIndex
             }
             else -> {
-                val priority = repository.getGamePriority(sessionId)
-                val firstCardIndex = priority.indexOf(firstPlayerCard.suit)
-                val secondCardIndex = priority.indexOf(secondPlayerCard.suit)
-                if (firstCardIndex > secondCardIndex) Winner.First else Winner.Second
+                playingCard.value to opponentCard.value
             }
-        }.also { repository.dropCards(sessionId) }
-    }
+        }
+        val firstPoint = if (first > second) 1 else 0
+        val secondPoint = if (firstPoint == 0) 1 else 0
+        val points = firstPoint to secondPoint
+        repository.updatePoints(sessionId, points)
+        repository.dropCards(sessionId)
+        return points
 
-    sealed class Winner {
-        object First: Winner()
-        object Second: Winner()
     }
 }

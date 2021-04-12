@@ -24,7 +24,7 @@ class DealGameUseCase @Inject constructor(
             deckFirstPlayer = decks.first,
             deckSecondPlayer = decks.second
         )
-        return Hand(user, priority, decks.first)
+        return Hand(user, priority, decks.first, 0 to 0)
     }
 
     private fun shufflePriority(): Priority =
