@@ -61,4 +61,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     testImplementation "junit:junit:$junit_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "org.amshove.kluent:kluent:$kluent_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$test_coroutine_version"
 }
