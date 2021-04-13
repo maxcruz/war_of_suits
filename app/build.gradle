@@ -21,7 +21,12 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+        }
+        debug {
+            debuggable true
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -38,6 +43,16 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    // Workaround: https://github.com/Kotlin/kotlinx.coroutines/issues/2023
+    packagingOptions {
+        // for JNA and JNA-platform
+        exclude "META-INF/AL2.0"
+        exclude "META-INF/LGPL2.1"
+        // for byte-buddy
+        exclude "META-INF/licenses/ASM"
+        pickFirst "win32-x86-64/attach_hotspot_windows.dll"
+        pickFirst "win32-x86/attach_hotspot_windows.dll"
+    }
 }
 
 dependencies {
@@ -45,8 +60,6 @@ dependencies {
     implementation project(":feature:leaderboard")
     implementation project(":feature:game")
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.core:core-ktx:$core_version"
-    implementation "com.google.android.material:material:$material_version"
     implementation "androidx.activity:activity-compose:$activity_compose_version"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
@@ -56,7 +69,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     testImplementation "junit:junit:$junit_version"
+    //testImplementation "io.mockk:mockk:$mockk_version"
+    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
     androidTestImplementation "androidx.test.ext:junit:$android_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexmaker_version"
+    androidTestImplementation "org.amshove.kluent:kluent-android:$kluent_version"
 }

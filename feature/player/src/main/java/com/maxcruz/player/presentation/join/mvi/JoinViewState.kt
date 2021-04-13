@@ -56,7 +56,6 @@ data class JoinViewState(
                     // Input
                     InputField(
                         placeholder = "#",
-
                         modifier = Modifier.width(150.dp),
                         isError = !hasError,
                         onDone = {

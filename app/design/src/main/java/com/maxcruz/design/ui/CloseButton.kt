@@ -25,6 +25,6 @@ fun CloseButton(
         onClick = onClick,
         modifier = modifier.padding(all = 0.dp),
     ) {
-        Icon(imageVector, stringResource(R.string.close_button))
+        Icon(imageVector, contentDescription = stringResource(R.string.close_button))
     }
 }

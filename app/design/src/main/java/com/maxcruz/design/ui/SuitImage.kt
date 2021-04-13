@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import com.maxcruz.design.R
 
@@ -21,8 +22,8 @@ fun SuitImage(
     }
     Image(
         painterResource(resource),
-        contentDescription = "",
+        contentDescription = suit,
         contentScale = ContentScale.Crop,
-        modifier = modifier
+        modifier = modifier.testTag("priority")
     )
 }

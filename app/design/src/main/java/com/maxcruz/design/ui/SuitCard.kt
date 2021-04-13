@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,8 @@ fun SuitCard(
     Card(
         modifier = modifier
             .height(350.dp)
-            .width(220.dp),
+            .width(220.dp)
+            .testTag("$value $suit"),
         shape = RoundedCornerShape(corner = CornerSize(size = 16.dp)),
         elevation = elevation
     ) {
