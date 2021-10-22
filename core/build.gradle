@@ -21,7 +21,6 @@ android {
             minifyEnabled true
         }
         debug {
-            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.debug
         }

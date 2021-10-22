@@ -1,8 +1,6 @@
 package com.maxcruz.game.navigation
 
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.popUpTo
 import com.maxcruz.core.presentation.navigation.MVINavigator
 
 /**

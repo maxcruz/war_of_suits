@@ -3,7 +3,7 @@ package com.maxcruz.leaderboard.navigation
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.maxcruz.leaderboard.navigation.LeaderboardNavigator.Companion.LEADERBOARD
 import com.maxcruz.leaderboard.navigation.LeaderboardNavigator.Companion.ROOT
 import com.maxcruz.leaderboard.presentation.LeaderboardView

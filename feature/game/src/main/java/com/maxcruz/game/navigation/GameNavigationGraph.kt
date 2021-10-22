@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.maxcruz.game.navigation.GameNavigator.Companion.GAME
 import com.maxcruz.game.navigation.GameNavigator.Companion.ROOT
 import com.maxcruz.game.navigation.GameNavigator.Companion.SESSION

@@ -1,7 +1,6 @@
 package com.maxcruz.leaderboard.navigation
 
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import com.maxcruz.core.presentation.navigation.MVINavigator
 
 class LeaderboardNavigator(navController: NavController) : MVINavigator {
